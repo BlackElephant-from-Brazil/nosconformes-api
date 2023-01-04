@@ -1,11 +1,16 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from '../users/users.module';
-import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './local.stratedy';
+import { LocalStrategy } from './strategies/local.stratedy';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_SECRET_KEY } from 'src/config/constants';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { LoginService } from './services/login.service';
+import { FindUserByEmailService } from '../users/services/find-user-by-email.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../users/users.entity';
+import { AuthController } from './auth.controller';
+import { ChangePasswordService } from './services/change-password.service';
 
 @Module({
   imports: [
@@ -15,8 +20,16 @@ import { JwtStrategy } from './jwt.strategy';
       secret: JWT_SECRET_KEY,
       signOptions: { expiresIn: '10h' },
     }),
+    TypeOrmModule.forFeature([User]),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
+  providers: [
+    LocalStrategy,
+    JwtStrategy,
+    LoginService,
+    FindUserByEmailService,
+    ChangePasswordService,
+  ],
+  controllers: [AuthController],
+  exports: [],
 })
 export class AuthModule {}

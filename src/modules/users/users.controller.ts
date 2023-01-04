@@ -20,8 +20,8 @@ export class UsersController {
   ) {}
 
   @Post()
-  async create(@Body() user: CreateUserDTO, @Res() res: Response) {
-    const createdUser = await this.createUserService.execute(user);
+  async create(@Body() createUserDTO: CreateUserDTO, @Res() res: Response) {
+    const createdUser = await this.createUserService.execute(createUserDTO);
     res.json(createdUser).status(HttpStatus.CREATED);
   }
 

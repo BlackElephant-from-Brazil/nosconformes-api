@@ -1,4 +1,3 @@
-// import { Company } from 'src/graphql.schema';
 import {
   Column,
   CreateDateColumn,
@@ -8,7 +7,7 @@ import {
 } from 'typeorm';
 
 @Entity('companies')
-export class CompaniesEntity {
+export class Company {
   @PrimaryGeneratedColumn('uuid')
   _eq: string;
 
@@ -24,9 +23,9 @@ export class CompaniesEntity {
   @Column()
   site: string;
 
-  // @CreateDateColumn('created_at')
-  // createdAt: Date;
+  @CreateDateColumn('created_at')
+  createdAt: Date;
 
-  // @UpdateDateColumn('updated_at')
-  // updatedAt: Date;
+  @UpdateDateColumn('updated_at')
+  updatedAt: Date;
 }
