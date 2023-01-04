@@ -1,7 +1,7 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import path from 'path';
+import { resolve } from 'path';
 import {
   POSTGRES_DATABASE,
   POSTGRES_PASSWORD,
@@ -13,7 +13,7 @@ config();
 
 const configService = new ConfigService();
 
-export const dataSource = new DataSource({
+export const databaseConfigurations: DataSourceOptions = {
   name: 'default',
   type: 'postgres',
   host: 'localhost',
@@ -22,9 +22,9 @@ export const dataSource = new DataSource({
   password: configService.get(POSTGRES_PASSWORD),
   database: configService.get(POSTGRES_DATABASE),
   migrationsTableName: 'migrations',
-  // entities: [
-  //   path.resolve(__dirname, '..', 'modules', '**', '**.entity{.ts,.js}'),
-  // ],
-  // migrations: [path.resolve(__dirname, 'migrations', '*{.ts,.js}')],
-  // subscribers: [path.resolve(__dirname, 'subscriber', '*{.ts,.js}')],
-});
+  entities: [resolve(__dirname, '..', 'modules', '**', '**.entity{.ts,.js}')],
+  migrations: [resolve(__dirname, 'migrations', '*{.ts,.js}')],
+  subscribers: [resolve(__dirname, 'subscriber', '*{.ts,.js}')],
+};
+
+export const dataSource = new DataSource(databaseConfigurations);
