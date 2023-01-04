@@ -1,0 +1,1 @@
+{"version":3,"file":"companies.provider.js","sourceRoot":"","sources":["../../../../src/modules/companies/companies.provider.ts"],"names":[],"mappings":";;;AAAA,sDAAyE;AAEzE,yDAAqD;AAExC,QAAA,gBAAgB,GAAG;IAC9B;QACE,OAAO,EAAE,gCAAoB;QAC7B,UAAU,EAAE,CAAC,UAAsB,EAAE,EAAE,CACrC,UAAU,CAAC,aAAa,CAAC,kCAAe,CAAC;QAC3C,MAAM,EAAE,CAAC,uBAAW,CAAC;KACtB;CACF,CAAC"}
