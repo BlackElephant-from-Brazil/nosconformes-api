@@ -15,11 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChangePasswordService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const constants_1 = require("../../../config/constants");
 const users_entity_1 = require("../../users/users.entity");
 const typeorm_2 = require("typeorm");
 let ChangePasswordService = class ChangePasswordService {
-    constructor(usersRepository) {
+    constructor(usersRepository, generateHash) {
         this.usersRepository = usersRepository;
+        this.generateHash = generateHash;
     }
     async execute({ email, password, passwordConfirmation, }) {
         let user;
@@ -31,18 +33,21 @@ let ChangePasswordService = class ChangePasswordService {
             });
         }
         catch (e) {
-            throw new Error('Internal server error');
+            throw new common_1.InternalServerErrorException();
         }
         if (!user)
             throw new Error('User not found');
         if (password !== passwordConfirmation)
             throw new Error('Passwords does not match');
-        user.password = password;
+        const hashedPassword = await this.generateHash({
+            password,
+        });
+        user.password = hashedPassword;
         try {
             await this.usersRepository.save(user);
         }
         catch (e) {
-            throw new Error('Internal server error');
+            throw new common_1.InternalServerErrorException();
         }
         return user;
     }
@@ -50,7 +55,8 @@ let ChangePasswordService = class ChangePasswordService {
 ChangePasswordService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, common_1.Inject)(constants_1.HASH)),
+    __metadata("design:paramtypes", [typeorm_2.Repository, Function])
 ], ChangePasswordService);
 exports.ChangePasswordService = ChangePasswordService;
 //# sourceMappingURL=change-password.service.js.map

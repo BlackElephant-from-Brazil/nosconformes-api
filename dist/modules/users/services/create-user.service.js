@@ -15,18 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const constants_1 = require("../../../config/constants");
 const typeorm_2 = require("typeorm");
 const users_entity_1 = require("../users.entity");
 let CreateUserService = class CreateUserService {
-    constructor(usersRepository) {
+    constructor(usersRepository, generateHash) {
         this.usersRepository = usersRepository;
+        this.generateHash = generateHash;
     }
     async execute({ profilePicture, name, email, password, office, accessLevel, }) {
+        const hashedPassword = await this.generateHash({
+            password,
+        });
         const createdUser = this.usersRepository.create({
             profilePicture,
             name,
             email,
-            password,
+            password: hashedPassword,
             office,
             accessLevel,
         });
@@ -37,7 +42,8 @@ let CreateUserService = class CreateUserService {
 CreateUserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, common_1.Inject)(constants_1.HASH)),
+    __metadata("design:paramtypes", [typeorm_2.Repository, Function])
 ], CreateUserService);
 exports.CreateUserService = CreateUserService;
 //# sourceMappingURL=create-user.service.js.map

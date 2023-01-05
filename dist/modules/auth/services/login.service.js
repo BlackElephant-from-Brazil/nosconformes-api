@@ -16,12 +16,14 @@ exports.LoginService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const typeorm_1 = require("@nestjs/typeorm");
+const constants_1 = require("../../../config/constants");
 const users_entity_1 = require("../../users/users.entity");
 const typeorm_2 = require("typeorm");
 let LoginService = class LoginService {
-    constructor(usersRepository, jwtService) {
+    constructor(usersRepository, jwtService, compareHash) {
         this.usersRepository = usersRepository;
         this.jwtService = jwtService;
+        this.compareHash = compareHash;
     }
     async execute({ email, password }) {
         let user;
@@ -33,12 +35,17 @@ let LoginService = class LoginService {
             });
         }
         catch (e) {
-            throw new Error('Internal server error');
+            throw new common_1.InternalServerErrorException();
         }
         if (!user)
             throw new Error('Oops! Email or password does not match!');
-        if (user.password !== password)
+        const passwordValidated = await this.compareHash({
+            storedPassword: user.password,
+            typedPassword: password,
+        });
+        if (!passwordValidated)
             throw new Error('Oops! Email or password does not match!');
+        delete user.password;
         const payload = {
             email: user.email,
             sub: user._eq,
@@ -54,8 +61,9 @@ let LoginService = class LoginService {
 LoginService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.User)),
+    __param(2, (0, common_1.Inject)(constants_1.COMPARE)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        jwt_1.JwtService])
+        jwt_1.JwtService, Function])
 ], LoginService);
 exports.LoginService = LoginService;
 //# sourceMappingURL=login.service.js.map

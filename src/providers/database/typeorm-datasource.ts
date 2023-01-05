@@ -7,7 +7,7 @@ import {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USERNAME,
-} from '../config/constants';
+} from '../../config/constants';
 
 config();
 

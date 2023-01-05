@@ -1,7 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { COMPARE } from 'src/config/constants';
 import { User } from 'src/modules/users/users.entity';
+import { CompareHash } from 'src/providers/encriptation/bcrypt.provider';
 import { Repository } from 'typeorm';
 import { LoggedUserDTO } from '../dtos/logged-user.dto';
 import { LoginUserDTO } from '../dtos/login-user.dto';
@@ -12,6 +18,8 @@ export class LoginService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private jwtService: JwtService,
+    @Inject(COMPARE)
+    private compareHash: CompareHash,
   ) {}
 
   async execute({ email, password }: LoginUserDTO): Promise<LoggedUserDTO> {
@@ -23,13 +31,20 @@ export class LoginService {
         },
       });
     } catch (e) {
-      throw new Error('Internal server error');
+      throw new InternalServerErrorException();
     }
 
     if (!user) throw new Error('Oops! Email or password does not match!');
 
-    if (user.password !== password)
+    const passwordValidated = await this.compareHash({
+      storedPassword: user.password,
+      typedPassword: password,
+    });
+
+    if (!passwordValidated)
       throw new Error('Oops! Email or password does not match!');
+
+    delete user.password;
 
     const payload = {
       email: user.email,
