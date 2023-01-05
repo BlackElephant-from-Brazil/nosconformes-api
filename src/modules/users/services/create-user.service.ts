@@ -1,7 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HASH } from 'src/config/constants';
-import { GenerateHash } from 'src/providers/encriptation/bcrypt.provider';
+import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { User } from '../users.entity';
@@ -11,8 +10,7 @@ export class CreateUserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    @Inject(HASH)
-    private generateHash: GenerateHash,
+    private hashProvider: BCryptProvider,
   ) {}
 
   async execute({
@@ -23,7 +21,7 @@ export class CreateUserService {
     office,
     accessLevel,
   }: CreateUserDTO): Promise<User> {
-    const hashedPassword = await this.generateHash({
+    const hashedPassword = await this.hashProvider.hash({
       password,
     });
 
@@ -37,6 +35,8 @@ export class CreateUserService {
     });
 
     await this.usersRepository.save(createdUser);
+
+    delete createdUser.password;
 
     return createdUser;
   }

@@ -16,14 +16,14 @@ exports.LoginService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const typeorm_1 = require("@nestjs/typeorm");
-const constants_1 = require("../../../config/constants");
 const users_entity_1 = require("../../users/users.entity");
+const bcrypt_provider_1 = require("../../../providers/encriptation/bcrypt.provider");
 const typeorm_2 = require("typeorm");
 let LoginService = class LoginService {
-    constructor(usersRepository, jwtService, compareHash) {
+    constructor(usersRepository, jwtService, hashProvider) {
         this.usersRepository = usersRepository;
         this.jwtService = jwtService;
-        this.compareHash = compareHash;
+        this.hashProvider = hashProvider;
     }
     async execute({ email, password }) {
         let user;
@@ -39,7 +39,7 @@ let LoginService = class LoginService {
         }
         if (!user)
             throw new Error('Oops! Email or password does not match!');
-        const passwordValidated = await this.compareHash({
+        const passwordValidated = await this.hashProvider.compare({
             storedPassword: user.password,
             typedPassword: password,
         });
@@ -61,9 +61,9 @@ let LoginService = class LoginService {
 LoginService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.User)),
-    __param(2, (0, common_1.Inject)(constants_1.COMPARE)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        jwt_1.JwtService, Function])
+        jwt_1.JwtService,
+        bcrypt_provider_1.BCryptProvider])
 ], LoginService);
 exports.LoginService = LoginService;
 //# sourceMappingURL=login.service.js.map

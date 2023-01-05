@@ -15,16 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const constants_1 = require("../../../config/constants");
+const bcrypt_provider_1 = require("../../../providers/encriptation/bcrypt.provider");
 const typeorm_2 = require("typeorm");
 const users_entity_1 = require("../users.entity");
 let CreateUserService = class CreateUserService {
-    constructor(usersRepository, generateHash) {
+    constructor(usersRepository, hashProvider) {
         this.usersRepository = usersRepository;
-        this.generateHash = generateHash;
+        this.hashProvider = hashProvider;
     }
     async execute({ profilePicture, name, email, password, office, accessLevel, }) {
-        const hashedPassword = await this.generateHash({
+        const hashedPassword = await this.hashProvider.hash({
             password,
         });
         const createdUser = this.usersRepository.create({
@@ -36,14 +36,15 @@ let CreateUserService = class CreateUserService {
             accessLevel,
         });
         await this.usersRepository.save(createdUser);
+        delete createdUser.password;
         return createdUser;
     }
 };
 CreateUserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.User)),
-    __param(1, (0, common_1.Inject)(constants_1.HASH)),
-    __metadata("design:paramtypes", [typeorm_2.Repository, Function])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        bcrypt_provider_1.BCryptProvider])
 ], CreateUserService);
 exports.CreateUserService = CreateUserService;
 //# sourceMappingURL=create-user.service.js.map

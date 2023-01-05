@@ -1,12 +1,7 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HASH } from 'src/config/constants';
 import { User } from 'src/modules/users/users.entity';
-import { GenerateHash } from 'src/providers/encriptation/bcrypt.provider';
+import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 import { Repository } from 'typeorm';
 import { NewPasswordDTO } from '../dtos/new-password.dto';
 
@@ -15,8 +10,7 @@ export class ChangePasswordService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    @Inject(HASH)
-    private generateHash: GenerateHash,
+    private hashProvider: BCryptProvider,
   ) {}
 
   async execute({
@@ -40,7 +34,7 @@ export class ChangePasswordService {
     if (password !== passwordConfirmation)
       throw new Error('Passwords does not match');
 
-    const hashedPassword = await this.generateHash({
+    const hashedPassword = await this.hashProvider.hash({
       password,
     });
 
@@ -51,6 +45,8 @@ export class ChangePasswordService {
     } catch (e) {
       throw new InternalServerErrorException();
     }
+
+    delete user.password;
 
     return user;
   }

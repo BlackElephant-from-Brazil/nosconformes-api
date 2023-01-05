@@ -18,6 +18,7 @@ const typeorm_datasource_1 = require("./providers/database/typeorm-datasource");
 const typeorm_2 = require("typeorm");
 const auth_module_1 = require("./modules/auth/auth.module");
 const users_module_1 = require("./modules/users/users.module");
+const encriptation_module_1 = require("./providers/encriptation/encriptation.module");
 let AppModule = class AppModule {
     constructor(dataSource) {
         this.dataSource = dataSource;
@@ -33,6 +34,7 @@ AppModule = __decorate([
             }),
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
+            encriptation_module_1.EncriptationModule,
         ],
     }),
     __metadata("design:paramtypes", [typeorm_2.DataSource])
