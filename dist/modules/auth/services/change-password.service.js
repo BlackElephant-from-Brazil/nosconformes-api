@@ -16,10 +16,12 @@ exports.ChangePasswordService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const users_entity_1 = require("../../users/users.entity");
+const bcrypt_provider_1 = require("../../../providers/encriptation/bcrypt.provider");
 const typeorm_2 = require("typeorm");
 let ChangePasswordService = class ChangePasswordService {
-    constructor(usersRepository) {
+    constructor(usersRepository, hashProvider) {
         this.usersRepository = usersRepository;
+        this.hashProvider = hashProvider;
     }
     async execute({ email, password, passwordConfirmation, }) {
         let user;
@@ -31,26 +33,31 @@ let ChangePasswordService = class ChangePasswordService {
             });
         }
         catch (e) {
-            throw new Error('Internal server error');
+            throw new common_1.InternalServerErrorException();
         }
         if (!user)
             throw new Error('User not found');
         if (password !== passwordConfirmation)
             throw new Error('Passwords does not match');
-        user.password = password;
+        const hashedPassword = await this.hashProvider.hash({
+            password,
+        });
+        user.password = hashedPassword;
         try {
             await this.usersRepository.save(user);
         }
         catch (e) {
-            throw new Error('Internal server error');
+            throw new common_1.InternalServerErrorException();
         }
+        delete user.password;
         return user;
     }
 };
 ChangePasswordService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        bcrypt_provider_1.BCryptProvider])
 ], ChangePasswordService);
 exports.ChangePasswordService = ChangePasswordService;
 //# sourceMappingURL=change-password.service.js.map

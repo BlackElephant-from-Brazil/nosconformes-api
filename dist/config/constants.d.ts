@@ -6,3 +6,5 @@ export declare const POSTGRES_DATABASE = "POSTGRES_DATABASE";
 export declare const LOCAL_STRATEGY = "local";
 export declare const JWT_STRATEGY = "jwt";
 export declare const JWT_SECRET_KEY = "8aa0f4635a4e4e982cd3c7e03c70a950";
+export declare const HASH = "HASH";
+export declare const COMPARE = "COMPARE";

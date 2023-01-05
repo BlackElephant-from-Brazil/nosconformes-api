@@ -8,6 +8,7 @@ import { User } from '../users/users.entity';
 import { AuthController } from './auth.controller';
 import { authServices } from './services';
 import { authStrategies } from './strategies';
+import { EncriptationModule } from 'src/providers/encriptation/encriptation.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { authStrategies } from './strategies';
       signOptions: { expiresIn: '10h' },
     }),
     TypeOrmModule.forFeature([User]),
+    EncriptationModule,
   ],
   providers: [...authStrategies, ...authServices],
   controllers: [AuthController],

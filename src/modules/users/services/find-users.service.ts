@@ -29,6 +29,8 @@ export class FindUsersService {
       ],
     });
 
+    findUsers.forEach((u) => delete u.password);
+
     return findUsers;
   }
 }

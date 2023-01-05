@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from 'src/config/configuration';
-import { databaseConfigurations } from 'src/database/typeorm-datasource';
+import { databaseConfigurations } from 'src/providers/database/typeorm-datasource';
 import { DataSource } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { EncriptationModule } from './providers/encriptation/encriptation.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UsersModule } from './modules/users/users.module';
     }),
     AuthModule,
     UsersModule,
+    EncriptationModule,
   ],
 })
 export class AppModule {

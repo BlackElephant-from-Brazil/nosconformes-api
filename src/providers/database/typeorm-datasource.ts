@@ -7,7 +7,7 @@ import {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USERNAME,
-} from '../config/constants';
+} from '../../config/constants';
 
 config();
 
@@ -22,7 +22,9 @@ export const databaseConfigurations: DataSourceOptions = {
   password: configService.get(POSTGRES_PASSWORD),
   database: configService.get(POSTGRES_DATABASE),
   migrationsTableName: 'migrations',
-  entities: [resolve(__dirname, '..', 'modules', '**', '**.entity{.ts,.js}')],
+  entities: [
+    resolve(__dirname, '..', '..', 'modules', '**', '**.entity{.ts,.js}'),
+  ],
   migrations: [resolve(__dirname, 'migrations', '*{.ts,.js}')],
   subscribers: [resolve(__dirname, 'subscriber', '*{.ts,.js}')],
 };

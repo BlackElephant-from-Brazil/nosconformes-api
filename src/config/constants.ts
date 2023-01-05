@@ -6,3 +6,5 @@ export const POSTGRES_DATABASE = 'POSTGRES_DATABASE';
 export const LOCAL_STRATEGY = 'local';
 export const JWT_STRATEGY = 'jwt';
 export const JWT_SECRET_KEY = '8aa0f4635a4e4e982cd3c7e03c70a950';
+export const HASH = 'HASH';
+export const COMPARE = 'COMPARE';
