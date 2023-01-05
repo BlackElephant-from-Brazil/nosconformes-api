@@ -12,44 +12,47 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersController = void 0;
+exports.CompaniesController = void 0;
 const common_1 = require("@nestjs/common");
-const create_user_service_1 = require("./services/create-user.service");
-const find_users_service_1 = require("./services/find-users.service");
-let UsersController = class UsersController {
-    constructor(createUserService, findUsersService) {
-        this.createUserService = createUserService;
-        this.findUsersService = findUsersService;
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const create_company_service_1 = require("./services/create-company.service");
+const find_companies_service_1 = require("./services/find-companies.service");
+let CompaniesController = class CompaniesController {
+    constructor(createCompanyService, findCompaniesService) {
+        this.createCompanyService = createCompanyService;
+        this.findCompaniesService = findCompaniesService;
     }
-    async create(createUserDTO, res) {
-        const createdUser = await this.createUserService.execute(createUserDTO);
-        res.json(createdUser).status(common_1.HttpStatus.CREATED);
+    async create(createCompanyDTO, res) {
+        const createdCompany = await this.createCompanyService.execute(createCompanyDTO);
+        res.json(createdCompany).status(common_1.HttpStatus.CREATED);
     }
     async read(query, res) {
-        const users = await this.findUsersService.execute(query);
-        res.json(users).status(common_1.HttpStatus.OK);
+        const companies = await this.findCompaniesService.execute(query);
+        res.json(companies).status(common_1.HttpStatus.OK);
     }
 };
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "create", null);
+], CompaniesController.prototype, "create", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('query')),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "read", null);
-UsersController = __decorate([
-    (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [create_user_service_1.CreateUserService,
-        find_users_service_1.FindUsersService])
-], UsersController);
-exports.UsersController = UsersController;
-//# sourceMappingURL=users.controller.js.map
+], CompaniesController.prototype, "read", null);
+CompaniesController = __decorate([
+    (0, common_1.Controller)('companies'),
+    __metadata("design:paramtypes", [create_company_service_1.CreateCompanyService,
+        find_companies_service_1.FindCompaniesService])
+], CompaniesController);
+exports.CompaniesController = CompaniesController;
+//# sourceMappingURL=companies.controller.js.map

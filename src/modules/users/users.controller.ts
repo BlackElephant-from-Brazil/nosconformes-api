@@ -27,7 +27,7 @@ export class UsersController {
 
   @Get()
   async read(@Query('query') query: string, @Res() res: Response) {
-    const user = await this.findUsersService.execute(query);
-    res.json(user).status(HttpStatus.OK);
+    const users = await this.findUsersService.execute(query);
+    res.json(users).status(HttpStatus.OK);
   }
 }

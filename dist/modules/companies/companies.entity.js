@@ -9,32 +9,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompaniesEntity = void 0;
+exports.Company = void 0;
 const typeorm_1 = require("typeorm");
-let CompaniesEntity = class CompaniesEntity {
+let Company = class Company {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
-], CompaniesEntity.prototype, "_eq", void 0);
+], Company.prototype, "_eq", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CompaniesEntity.prototype, "logo", void 0);
+], Company.prototype, "logo", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CompaniesEntity.prototype, "name", void 0);
+], Company.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CompaniesEntity.prototype, "cnpj", void 0);
+], Company.prototype, "cnpj", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CompaniesEntity.prototype, "site", void 0);
-CompaniesEntity = __decorate([
+], Company.prototype, "site", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ name: 'created_at' }),
+    __metadata("design:type", Date)
+], Company.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ name: 'updated_at' }),
+    __metadata("design:type", Date)
+], Company.prototype, "updatedAt", void 0);
+Company = __decorate([
     (0, typeorm_1.Entity)('companies')
-], CompaniesEntity);
-exports.CompaniesEntity = CompaniesEntity;
+], Company);
+exports.Company = Company;
 //# sourceMappingURL=companies.entity.js.map

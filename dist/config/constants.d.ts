@@ -1,4 +1,3 @@
-export declare const COMPANIES_REPOSITORY = "COMPANIES_REPOSITORY";
 export declare const DATA_SOURCE = "DATA_SOURCE";
 export declare const POSTGRES_PORT = "POSTGRES_PORT";
 export declare const POSTGRES_USERNAME = "POSTGRES_USERNAME";

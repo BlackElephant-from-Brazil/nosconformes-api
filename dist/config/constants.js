@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JWT_SECRET_KEY = exports.JWT_STRATEGY = exports.LOCAL_STRATEGY = exports.POSTGRES_DATABASE = exports.POSTGRES_PASSWORD = exports.POSTGRES_USERNAME = exports.POSTGRES_PORT = exports.DATA_SOURCE = exports.COMPANIES_REPOSITORY = void 0;
-exports.COMPANIES_REPOSITORY = 'COMPANIES_REPOSITORY';
+exports.JWT_SECRET_KEY = exports.JWT_STRATEGY = exports.LOCAL_STRATEGY = exports.POSTGRES_DATABASE = exports.POSTGRES_PASSWORD = exports.POSTGRES_USERNAME = exports.POSTGRES_PORT = exports.DATA_SOURCE = void 0;
 exports.DATA_SOURCE = 'DATA_SOURCE';
 exports.POSTGRES_PORT = 'POSTGRES_PORT';
 exports.POSTGRES_USERNAME = 'POSTGRES_USERNAME';
