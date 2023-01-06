@@ -25,7 +25,7 @@ let LoginService = class LoginService {
         this.jwtService = jwtService;
         this.hashProvider = hashProvider;
     }
-    async execute({ email, password }) {
+    async execute({ email, password, }) {
         let user;
         try {
             user = await this.usersRepository.findOne({
@@ -52,6 +52,7 @@ let LoginService = class LoginService {
         };
         const accessToken = this.jwtService.sign(payload);
         const loggedUser = {
+            _success: true,
             user,
             accessToken,
         };
