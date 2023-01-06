@@ -50,7 +50,10 @@ let ChangePasswordService = class ChangePasswordService {
             throw new common_1.InternalServerErrorException();
         }
         delete user.password;
-        return user;
+        return {
+            _success: true,
+            user,
+        };
     }
 };
 ChangePasswordService = __decorate([

@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/users.entity';
 import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 import { Repository } from 'typeorm';
-import { LoggedUserDTO } from '../dtos/logged-user.dto';
-import { LoginUserDTO } from '../dtos/login-user.dto';
+import { LoginUserRespDTO } from '../dtos/resp/login-user.resp.dto';
+import { LoginUserReqDTO } from '../dtos/req/login-user.req.dto';
 
 @Injectable()
 export class LoginService {
@@ -16,7 +16,10 @@ export class LoginService {
     private hashProvider: BCryptProvider,
   ) {}
 
-  async execute({ email, password }: LoginUserDTO): Promise<LoggedUserDTO> {
+  async execute({
+    email,
+    password,
+  }: LoginUserReqDTO): Promise<LoginUserRespDTO> {
     let user: User;
     try {
       user = await this.usersRepository.findOne({
@@ -47,7 +50,8 @@ export class LoginService {
 
     const accessToken = this.jwtService.sign(payload);
 
-    const loggedUser: LoggedUserDTO = {
+    const loggedUser: LoginUserRespDTO = {
+      _success: true,
       user,
       accessToken,
     };

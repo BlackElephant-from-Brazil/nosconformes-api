@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/users.entity';
 import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 import { Repository } from 'typeorm';
-import { NewPasswordDTO } from '../dtos/new-password.dto';
+import { NewPasswordReqDTO } from '../dtos/req/new-password.req.dto';
+import { NewPasswordRespDTO } from '../dtos/resp/new-password.resp.dto';
 
 @Injectable()
 export class ChangePasswordService {
@@ -17,7 +18,7 @@ export class ChangePasswordService {
     email,
     password,
     passwordConfirmation,
-  }: NewPasswordDTO): Promise<User> {
+  }: NewPasswordReqDTO): Promise<NewPasswordRespDTO> {
     let user: User;
     try {
       user = await this.usersRepository.findOne({
@@ -48,6 +49,9 @@ export class ChangePasswordService {
 
     delete user.password;
 
-    return user;
+    return {
+      _success: true,
+      user,
+    };
   }
 }

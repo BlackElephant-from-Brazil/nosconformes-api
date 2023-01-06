@@ -14,10 +14,10 @@ const jwt_1 = require("@nestjs/jwt");
 const constants_1 = require("../../config/constants");
 const typeorm_1 = require("@nestjs/typeorm");
 const users_entity_1 = require("../users/users.entity");
-const auth_controller_1 = require("./auth.controller");
 const services_1 = require("./services");
 const strategies_1 = require("./strategies");
 const encriptation_module_1 = require("../../providers/encriptation/encriptation.module");
+const controllers_1 = require("./controllers");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
@@ -33,7 +33,7 @@ AuthModule = __decorate([
             encriptation_module_1.EncriptationModule,
         ],
         providers: [...strategies_1.authStrategies, ...services_1.authServices],
-        controllers: [auth_controller_1.AuthController],
+        controllers: [...controllers_1.authControllers],
         exports: [],
     })
 ], AuthModule);
