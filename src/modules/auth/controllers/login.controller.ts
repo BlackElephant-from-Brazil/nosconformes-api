@@ -16,7 +16,7 @@ import { Response } from 'express';
 import { RequestWithUser } from 'src/interfaces/request-with-user';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 
-@ApiTags('Authenticaton')
+@ApiTags('Authentication')
 @Controller('auth')
 export class LoginController {
   @UseGuards(LocalAuthGuard)

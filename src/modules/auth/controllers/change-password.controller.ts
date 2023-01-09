@@ -12,7 +12,7 @@ import { NewPasswordReqDTO } from '../dtos/req/new-password.req.dto';
 import { NewPasswordRespDTO } from '../dtos/resp/new-password.resp.dto';
 import { ChangePasswordService } from '../services/change-password.service';
 
-@ApiTags('Authenticaton')
+@ApiTags('Authentication')
 @Controller('auth')
 export class ChangePasswordController {
   constructor(private changePasswordService: ChangePasswordService) {}
@@ -34,6 +34,10 @@ export class ChangePasswordController {
     @Body() newPasswordDTO: NewPasswordReqDTO,
     @Res() res: Response,
   ) {
+    if (newPasswordDTO.password !== newPasswordDTO.passwordConfirmation)
+      throw new BadRequestError(
+        'A confirmação de senha precisa ser igual a senha.',
+      );
     const user = await this.changePasswordService.execute(newPasswordDTO);
 
     res.json(user).status(HttpStatus.OK);

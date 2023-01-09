@@ -9,17 +9,14 @@ type CompareDTO = {
   storedPassword: string;
 };
 
-export type GenerateHash = (data: HashDTO) => Promise<string>;
-export type CompareHash = (data: CompareDTO) => Promise<boolean>;
-
 export class BCryptProvider {
-  hash: GenerateHash = async ({ password }: HashDTO): Promise<string> => {
+  hash = async ({ password }: HashDTO): Promise<string> => {
     const saltOrRounds = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, saltOrRounds);
     return hashedPassword;
   };
 
-  compare: CompareHash = async ({
+  compare = async ({
     typedPassword,
     storedPassword,
   }: CompareDTO): Promise<boolean> => {

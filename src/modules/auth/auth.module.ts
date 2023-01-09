@@ -7,8 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/users.entity';
 import { authServices } from './services';
 import { authStrategies } from './strategies';
-import { EncriptationModule } from 'src/providers/encriptation/encriptation.module';
 import { authControllers } from './controllers';
+import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 
 @Module({
   imports: [
@@ -19,9 +19,8 @@ import { authControllers } from './controllers';
       signOptions: { expiresIn: '10h' },
     }),
     TypeOrmModule.forFeature([User]),
-    EncriptationModule,
   ],
-  providers: [...authStrategies, ...authServices],
+  providers: [...authStrategies, ...authServices, BCryptProvider],
   controllers: [...authControllers],
   exports: [],
 })
