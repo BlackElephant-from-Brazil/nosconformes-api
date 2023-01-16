@@ -5,6 +5,7 @@ import configuration from 'src/config/configuration';
 import { databaseConfigurations } from 'src/providers/database/typeorm-datasource';
 import { DataSource } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
+import { CompaniesModule } from './modules/companies/companies.module';
 import { UsersModule } from './modules/users/users.module';
 import { EncriptationModule } from './providers/encriptation/encriptation.module';
 
@@ -15,6 +16,7 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
       isGlobal: true,
       load: [configuration],
     }),
+    CompaniesModule,
     AuthModule,
     UsersModule,
     EncriptationModule,

@@ -11,17 +11,16 @@ import { authControllers } from './controllers';
 import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 
 @Module({
-  imports: [
-    UsersModule,
-    PassportModule,
-    JwtModule.register({
-      secret: JWT_SECRET_KEY,
-      signOptions: { expiresIn: '10h' },
-    }),
-    TypeOrmModule.forFeature([User]),
-  ],
-  providers: [...authStrategies, ...authServices, BCryptProvider],
-  controllers: [...authControllers],
-  exports: [],
+	imports: [
+		UsersModule,
+		PassportModule.register({ property: 'authenticated' }),
+		JwtModule.register({
+			secret: JWT_SECRET_KEY,
+			signOptions: { expiresIn: '10h' },
+		}),
+		TypeOrmModule.forFeature([User]),
+	],
+	providers: [...authStrategies, ...authServices, BCryptProvider],
+	controllers: [...authControllers],
 })
 export class AuthModule {}
