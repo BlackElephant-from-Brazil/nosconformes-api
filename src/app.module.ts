@@ -6,22 +6,24 @@ import { databaseConfigurations } from 'src/providers/database/typeorm-datasourc
 import { DataSource } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { CompaniesModule } from './modules/companies/companies.module';
+import { EmployeesModule } from './modules/employees/employees.module';
 import { UsersModule } from './modules/users/users.module';
 import { EncriptationModule } from './providers/encriptation/encriptation.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(databaseConfigurations),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [configuration],
-    }),
-    CompaniesModule,
-    AuthModule,
-    UsersModule,
-    EncriptationModule,
-  ],
+	imports: [
+		TypeOrmModule.forRoot(databaseConfigurations),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			load: [configuration],
+		}),
+		CompaniesModule,
+		AuthModule,
+		UsersModule,
+		EncriptationModule,
+		EmployeesModule,
+	],
 })
 export class AppModule {
-  constructor(private dataSource: DataSource) {}
+	constructor(private dataSource: DataSource) {}
 }

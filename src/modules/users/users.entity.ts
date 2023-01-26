@@ -27,7 +27,7 @@ export class User {
 	office: string;
 
 	@Column({ name: 'access_level' })
-	accessLevel: string;
+	accessLevel: 'master' | 'manager' | 'auditor' | 'consultor';
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

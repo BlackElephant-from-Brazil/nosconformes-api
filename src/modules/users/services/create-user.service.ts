@@ -7,37 +7,37 @@ import { User } from '../users.entity';
 
 @Injectable()
 export class CreateUserService {
-  constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    private hashProvider: BCryptProvider,
-  ) {}
+	constructor(
+		@InjectRepository(User)
+		private usersRepository: Repository<User>,
+		private hashProvider: BCryptProvider,
+	) {}
 
-  async execute({
-    profilePicture,
-    name,
-    email,
-    password,
-    office,
-    accessLevel,
-  }: CreateUserDTO): Promise<User> {
-    const hashedPassword = await this.hashProvider.hash({
-      password,
-    });
+	async execute({
+		profilePicture,
+		name,
+		email,
+		password,
+		office,
+		accessLevel,
+	}: CreateUserDTO): Promise<User> {
+		const hashedPassword = await this.hashProvider.hash({
+			password,
+		});
 
-    const createdUser = this.usersRepository.create({
-      profilePicture,
-      name,
-      email,
-      password: hashedPassword,
-      office,
-      accessLevel,
-    });
+		const createdUser = this.usersRepository.create({
+			profilePicture,
+			name,
+			email,
+			password: hashedPassword,
+			office,
+			accessLevel,
+		});
 
-    await this.usersRepository.save(createdUser);
+		await this.usersRepository.save(createdUser);
 
-    delete createdUser.password;
+		delete createdUser.password;
 
-    return createdUser;
-  }
+		return createdUser;
+	}
 }

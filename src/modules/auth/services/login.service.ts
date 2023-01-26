@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/users.entity';
@@ -28,18 +32,27 @@ export class LoginService {
 				},
 			});
 		} catch (e) {
-			throw new InternalServerErrorException();
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+			);
 		}
 
-		if (!user) throw new Error('Oops! Email or password does not match!');
+		if (!user) {
+			throw new BadRequestException(
+				'Email ou senha inválidos. Tente novamente.',
+			);
+		}
 
 		const passwordValidated = await this.hashProvider.compare({
 			storedPassword: user.password,
 			typedPassword: password,
 		});
 
-		if (!passwordValidated)
-			throw new Error('Oops! Email or password does not match!');
+		if (!passwordValidated) {
+			throw new BadRequestException(
+				'Email ou senha inválidos. Tente novamente.',
+			);
+		}
 
 		delete user.password;
 

@@ -1,5 +1,11 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Employee } from 'src/modules/employees/employee.entity';
+import { isObjectEmpty } from 'src/utils/is-object-empty';
 import { Repository } from 'typeorm';
 import { Company } from '../companies.entity';
 import { CreateCompanyDTO } from '../dtos/create-company.dto';
@@ -9,32 +15,70 @@ export class CreateCompanyService {
 	constructor(
 		@InjectRepository(Company)
 		private companiesRepository: Repository<Company>,
+		@InjectRepository(Employee)
+		private employeesRepository: Repository<Employee>,
 	) {}
 
-	async execute({
-		logo,
-		name,
-		site,
-		cnpj,
-	}: CreateCompanyDTO): Promise<Company> {
-		let company: Company;
+	async execute({ company, manager }: CreateCompanyDTO): Promise<Company> {
+		let createdCompany: Company;
+		let foundCompany: Company;
 		try {
-			company = this.companiesRepository.create({
-				logo,
-				name,
-				site,
-				cnpj,
+			foundCompany = await this.companiesRepository.findOneBy({
+				cnpj: company.cnpj,
 			});
 		} catch (e) {
-			throw new InternalServerErrorException();
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description:
+						'The error occurred when trying to find some company with existant CNPJ',
+				},
+			);
+		}
+
+		if (foundCompany) {
+			throw new BadRequestException(
+				`O cnpj já está cadastrado na plataforma para a empresa ${foundCompany.name}`,
+			);
 		}
 
 		try {
-			await this.companiesRepository.save(company);
+			createdCompany = this.companiesRepository.create({
+				logo: company.logo,
+				name: company.name,
+				site: company.site,
+				cnpj: company.cnpj,
+			});
+			await this.companiesRepository.save(createdCompany);
 		} catch (e) {
-			throw new InternalServerErrorException();
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description:
+						'The error occurred when trying to save the company',
+				},
+			);
 		}
 
-		return company;
+		if (!isObjectEmpty(manager) && manager && manager != undefined) {
+			try {
+				const createdManager = this.employeesRepository.create({
+					...manager,
+					accessLevel: 'manager',
+					companyId: createdCompany._eq,
+				});
+				await this.employeesRepository.save(createdManager);
+			} catch (e) {
+				throw new InternalServerErrorException(
+					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+					{
+						description:
+							'The error occurred when trying to save the manager',
+					},
+				);
+			}
+		}
+
+		return createdCompany;
 	}
 }
