@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/modules/users/users.entity';
-import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
+import { User } from '../../users/users.entity';
+import { BCryptProvider } from '../../../providers/encriptation/bcrypt.provider';
 import { Repository } from 'typeorm';
 import { NewPasswordReqDTO } from '../dtos/req/new-password.req.dto';
 import { NewPasswordRespDTO } from '../dtos/resp/new-password.resp.dto';

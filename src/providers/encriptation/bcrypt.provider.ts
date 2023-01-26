@@ -1,30 +1,16 @@
 import * as bcrypt from 'bcrypt';
+import { EncriptationInterface } from './interfaces/encriptation.interface';
 
-type HashDTO = {
-  password: string;
-};
+export class BCryptProvider implements EncriptationInterface {
+	hash = async ({ password }): Promise<string> => {
+		const saltOrRounds = await bcrypt.genSalt();
+		const hashedPassword = await bcrypt.hash(password, saltOrRounds);
+		return hashedPassword;
+	};
 
-type CompareDTO = {
-  typedPassword: string;
-  storedPassword: string;
-};
+	compare = async ({ typedPassword, storedPassword }): Promise<boolean> => {
+		const validated = await bcrypt.compare(typedPassword, storedPassword);
 
-export type GenerateHash = (data: HashDTO) => Promise<string>;
-export type CompareHash = (data: CompareDTO) => Promise<boolean>;
-
-export class BCryptProvider {
-  hash: GenerateHash = async ({ password }: HashDTO): Promise<string> => {
-    const saltOrRounds = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, saltOrRounds);
-    return hashedPassword;
-  };
-
-  compare: CompareHash = async ({
-    typedPassword,
-    storedPassword,
-  }: CompareDTO): Promise<boolean> => {
-    const validated = await bcrypt.compare(typedPassword, storedPassword);
-
-    return validated;
-  };
+		return validated;
+	};
 }
