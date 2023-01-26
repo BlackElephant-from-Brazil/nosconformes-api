@@ -30,7 +30,6 @@ export class FindCompaniesService {
 					employees: true,
 				},
 			});
-			console.log('findCompanies', findCompanies);
 		} catch (err) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor, tente novamente ou contate o suporte.',

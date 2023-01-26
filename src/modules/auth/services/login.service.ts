@@ -64,7 +64,6 @@ export class LoginService {
 		const accessToken = this.jwtService.sign(payload);
 
 		const loggedUser: LoginUserRespDTO = {
-			_success: true,
 			user,
 			accessToken,
 		};

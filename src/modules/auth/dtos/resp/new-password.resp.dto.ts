@@ -1,14 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Response } from 'src/interfaces/response';
 import { User } from 'src/modules/users/users.entity';
 
-export class NewPasswordRespDTO implements Response {
-	@ApiProperty({
-		description: 'Success response',
-		example: true,
-	})
-	_success: boolean;
-
+export class NewPasswordRespDTO {
 	@ApiProperty({
 		description: 'Success response',
 		example: {
