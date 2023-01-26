@@ -1,4 +1,4 @@
-export type CreateUserDTO = {
+export type UpdateUserDTO = {
 	profilePicture: string;
 	name: string;
 	email: string;

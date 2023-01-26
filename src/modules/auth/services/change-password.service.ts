@@ -8,50 +8,49 @@ import { NewPasswordRespDTO } from '../dtos/resp/new-password.resp.dto';
 
 @Injectable()
 export class ChangePasswordService {
-  constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    private hashProvider: BCryptProvider,
-  ) {}
+	constructor(
+		@InjectRepository(User)
+		private usersRepository: Repository<User>,
+		private hashProvider: BCryptProvider,
+	) {}
 
-  async execute({
-    email,
-    password,
-    passwordConfirmation,
-  }: NewPasswordReqDTO): Promise<NewPasswordRespDTO> {
-    let user: User;
-    try {
-      user = await this.usersRepository.findOne({
-        where: {
-          email,
-        },
-      });
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+	async execute({
+		email,
+		password,
+		passwordConfirmation,
+	}: NewPasswordReqDTO): Promise<NewPasswordRespDTO> {
+		let user: User;
+		try {
+			user = await this.usersRepository.findOne({
+				where: {
+					email,
+				},
+			});
+		} catch (e) {
+			throw new InternalServerErrorException();
+		}
 
-    if (!user) throw new Error('User not found');
+		if (!user) throw new Error('User not found');
 
-    if (password !== passwordConfirmation)
-      throw new Error('Passwords does not match');
+		if (password !== passwordConfirmation)
+			throw new Error('Passwords does not match');
 
-    const hashedPassword = await this.hashProvider.hash({
-      password,
-    });
+		const hashedPassword = await this.hashProvider.hash({
+			password,
+		});
 
-    user.password = hashedPassword;
+		user.password = hashedPassword;
 
-    try {
-      await this.usersRepository.save(user);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+		try {
+			await this.usersRepository.save(user);
+		} catch (e) {
+			throw new InternalServerErrorException();
+		}
 
-    delete user.password;
+		delete user.password;
 
-    return {
-      _success: true,
-      user,
-    };
-  }
+		return {
+			user,
+		};
+	}
 }
