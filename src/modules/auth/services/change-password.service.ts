@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../users/users.entity';
 import { BCryptProvider } from '../../../providers/encriptation/bcrypt.provider';
@@ -27,24 +31,45 @@ export class ChangePasswordService {
 				},
 			});
 		} catch (e) {
-			throw new InternalServerErrorException();
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error fetching user from database',
+				},
+			);
 		}
 
-		if (!user) throw new Error('User not found');
+		if (!user) throw new BadRequestException('O usuário não existe');
 
 		if (password !== passwordConfirmation)
-			throw new Error('Passwords does not match');
+			throw new BadRequestException('As senhas não coincidem');
 
-		const hashedPassword = await this.hashProvider.hash({
-			password,
-		});
+		let hashedPassword: string;
+
+		try {
+			hashedPassword = await this.hashProvider.hash({
+				password,
+			});
+		} catch (e) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error hashing password',
+				},
+			);
+		}
 
 		user.password = hashedPassword;
 
 		try {
 			await this.usersRepository.save(user);
 		} catch (e) {
-			throw new InternalServerErrorException();
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error saving user to database',
+				},
+			);
 		}
 
 		delete user.password;

@@ -89,6 +89,7 @@
 			"^.+\\.(t|j)s$": "ts-jest"
 		},
 		"collectCoverageFrom": [
+			"!<rootDir>/src/modules/**/dtos/*",
 			"**/*.(t|j)s"
 		],
 		"coverageDirectory": "../coverage",
