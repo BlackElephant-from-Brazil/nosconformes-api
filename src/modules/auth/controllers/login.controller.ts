@@ -24,7 +24,7 @@ export class LoginController {
 	@ApiBadRequestResponse()
 	@ApiInternalServerErrorResponse()
 	@Post('login')
-	async login(@Req() req: RequestWithUser, @Res() res: Response) {
+	async create(@Req() req: RequestWithUser, @Res() res: Response) {
 		res.json(req.authenticated).status(HttpStatus.OK);
 	}
 }

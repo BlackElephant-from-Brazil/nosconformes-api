@@ -23,6 +23,9 @@ export class ChangePasswordService {
 		password,
 		passwordConfirmation,
 	}: NewPasswordReqDTO): Promise<NewPasswordRespDTO> {
+		if (password !== passwordConfirmation)
+			throw new BadRequestException('As senhas não coincidem');
+
 		let user: User;
 		try {
 			user = await this.usersRepository.findOne({
@@ -40,9 +43,6 @@ export class ChangePasswordService {
 		}
 
 		if (!user) throw new BadRequestException('O usuário não existe');
-
-		if (password !== passwordConfirmation)
-			throw new BadRequestException('As senhas não coincidem');
 
 		let hashedPassword: string;
 
