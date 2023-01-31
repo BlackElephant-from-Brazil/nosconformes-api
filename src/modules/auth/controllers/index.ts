@@ -1,4 +1,4 @@
-import { ChangePasswordController } from './change-password.controller';
+import { PasswordController } from './password.controller';
 import { LoginController } from './login.controller';
 
-export const authControllers = [ChangePasswordController, LoginController];
+export const authControllers = [PasswordController, LoginController];

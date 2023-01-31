@@ -20,7 +20,7 @@ import { ChangePasswordService } from '../services/change-password.service';
 
 @ApiTags('Authentication')
 @Controller('auth')
-export class ChangePasswordController {
+export class PasswordController {
 	constructor(private changePasswordService: ChangePasswordService) {}
 
 	@Post('change-password')
@@ -36,14 +36,10 @@ export class ChangePasswordController {
 		description: 'Occurred some internal error.',
 		type: InternalServerErrorException,
 	})
-	async changePassword(
+	async update(
 		@Body() newPasswordDTO: NewPasswordReqDTO,
 		@Res() res: Response,
 	) {
-		if (newPasswordDTO.password !== newPasswordDTO.passwordConfirmation)
-			throw new BadRequestException(
-				'A confirmação de senha precisa ser igual a senha.',
-			);
 		const user = await this.changePasswordService.execute(newPasswordDTO);
 
 		res.json(user).status(HttpStatus.OK);
