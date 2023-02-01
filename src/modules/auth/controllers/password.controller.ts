@@ -17,13 +17,17 @@ import { Response } from 'express';
 import { NewPasswordReqDTO } from '../dtos/req/new-password.req.dto';
 import { NewPasswordRespDTO } from '../dtos/resp/new-password.resp.dto';
 import { ChangePasswordService } from '../services/change-password.service';
+import { ForgotPasswordService } from '../services/forgot-password.service';
 
 @ApiTags('Authentication')
-@Controller('auth')
+@Controller('password')
 export class PasswordController {
-	constructor(private changePasswordService: ChangePasswordService) {}
+	constructor(
+		private changePasswordService: ChangePasswordService,
+		private forgotPasswordService: ForgotPasswordService,
+	) {}
 
-	@Post('change-password')
+	@Post('change')
 	@ApiOkResponse({
 		description: 'User changed correctly the password.',
 		type: NewPasswordRespDTO,
@@ -43,5 +47,12 @@ export class PasswordController {
 		const user = await this.changePasswordService.execute(newPasswordDTO);
 
 		res.json(user).status(HttpStatus.OK);
+	}
+
+	@Post('forgot')
+	async forgot(@Body() { email }: { email: string }, @Res() res: Response) {
+		await this.forgotPasswordService.execute(email);
+
+		res.status(HttpStatus.OK).send();
 	}
 }
