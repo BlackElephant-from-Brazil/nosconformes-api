@@ -93,8 +93,9 @@
 			"^.+\\.(t|j)s$": "ts-jest"
 		},
 		"collectCoverageFrom": [
-			"!<rootDir>/src/modules/**/dtos/*",
-			"**/*.(t|j)s"
+			"**/*.(t|j)s",
+			"!<rootDir>/modules/**/dtos/**/*.(t|j)s",
+			"!<rootDir>/modules/auth/guards/*.(t|j)s"
 		],
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node",
