@@ -8,3 +8,5 @@ export const JWT_STRATEGY = 'jwt';
 export const JWT_SECRET_KEY = '8aa0f4635a4e4e982cd3c7e03c70a950';
 export const HASH = 'HASH';
 export const COMPARE = 'COMPARE';
+export const MAIL_USER = 'MAIL_USER';
+export const MAIL_PASSWORD = 'MAIL_PASSWORD';
