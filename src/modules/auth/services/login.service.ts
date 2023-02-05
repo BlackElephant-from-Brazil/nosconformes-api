@@ -34,6 +34,9 @@ export class LoginService {
 		} catch (e) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error fetching user from database',
+				},
 			);
 		}
 
@@ -43,10 +46,20 @@ export class LoginService {
 			);
 		}
 
-		const passwordValidated = await this.hashProvider.compare({
-			storedPassword: user.password,
-			typedPassword: password,
-		});
+		let passwordValidated: boolean;
+		try {
+			passwordValidated = await this.hashProvider.compare({
+				storedPassword: user.password,
+				typedPassword: password,
+			});
+		} catch (e) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error comparing passwords',
+				},
+			);
+		}
 
 		if (!passwordValidated) {
 			throw new BadRequestException(
@@ -64,7 +77,6 @@ export class LoginService {
 		const accessToken = this.jwtService.sign(payload);
 
 		const loggedUser: LoginUserRespDTO = {
-			_success: true,
 			user,
 			accessToken,
 		};

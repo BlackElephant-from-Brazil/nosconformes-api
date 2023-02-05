@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOperator, ILike, Repository } from 'typeorm';
 import { User } from '../users.entity';
@@ -12,26 +12,37 @@ export class FindUsersService {
 
 	async execute(query?: string): Promise<User[]> {
 		const resolvedQuery = query ? `%${query}%` : '%%';
-		const findUsers = await this.usersRepository.find({
-			where: [
+		let findUsers: User[];
+		try {
+			findUsers = await this.usersRepository.find({
+				where: [
+					{
+						accessLevel: ILike(resolvedQuery) as
+							| FindOperator<'manager'>
+							| FindOperator<'auditor'>
+							| FindOperator<'master'>
+							| FindOperator<'consultor'>,
+					},
+					{
+						email: ILike(resolvedQuery),
+					},
+					{
+						name: ILike(resolvedQuery),
+					},
+					{
+						office: ILike(resolvedQuery),
+					},
+				],
+			});
+		} catch (error) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
-					accessLevel: ILike(resolvedQuery) as
-						| FindOperator<'manager'>
-						| FindOperator<'auditor'>
-						| FindOperator<'master'>
-						| FindOperator<'consultor'>,
+					description:
+						'This error occurred when trying to find the users in the find-users.service.ts',
 				},
-				{
-					email: ILike(resolvedQuery),
-				},
-				{
-					name: ILike(resolvedQuery),
-				},
-				{
-					office: ILike(resolvedQuery),
-				},
-			],
-		});
+			);
+		}
 
 		findUsers.forEach((u) => delete u.password);
 

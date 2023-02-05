@@ -2,9 +2,11 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
+import { Protocol } from '../protocol/protocol.entity';
 
 @Entity('users')
 export class User {
@@ -28,6 +30,9 @@ export class User {
 
 	@Column({ name: 'access_level' })
 	accessLevel: 'master' | 'manager' | 'auditor' | 'consultor';
+
+	@OneToMany(() => Protocol, (protocol) => protocol.user)
+	protocols: Protocol[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

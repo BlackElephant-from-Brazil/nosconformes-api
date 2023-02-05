@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../users/users.entity';
 import { BCryptProvider } from '../../../providers/encriptation/bcrypt.provider';
@@ -8,50 +12,70 @@ import { NewPasswordRespDTO } from '../dtos/resp/new-password.resp.dto';
 
 @Injectable()
 export class ChangePasswordService {
-  constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    private hashProvider: BCryptProvider,
-  ) {}
+	constructor(
+		@InjectRepository(User)
+		private usersRepository: Repository<User>,
+		private hashProvider: BCryptProvider,
+	) {}
 
-  async execute({
-    email,
-    password,
-    passwordConfirmation,
-  }: NewPasswordReqDTO): Promise<NewPasswordRespDTO> {
-    let user: User;
-    try {
-      user = await this.usersRepository.findOne({
-        where: {
-          email,
-        },
-      });
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+	async execute({
+		email,
+		password,
+		passwordConfirmation,
+	}: NewPasswordReqDTO): Promise<NewPasswordRespDTO> {
+		if (password !== passwordConfirmation)
+			throw new BadRequestException('As senhas não coincidem');
 
-    if (!user) throw new Error('User not found');
+		let user: User;
+		try {
+			user = await this.usersRepository.findOne({
+				where: {
+					email,
+				},
+			});
+		} catch (e) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error fetching user from database',
+				},
+			);
+		}
 
-    if (password !== passwordConfirmation)
-      throw new Error('Passwords does not match');
+		if (!user) throw new BadRequestException('O usuário não existe');
 
-    const hashedPassword = await this.hashProvider.hash({
-      password,
-    });
+		let hashedPassword: string;
 
-    user.password = hashedPassword;
+		try {
+			hashedPassword = await this.hashProvider.hash({
+				password,
+			});
+		} catch (e) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error hashing password',
+				},
+			);
+		}
 
-    try {
-      await this.usersRepository.save(user);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+		user.password = hashedPassword;
 
-    delete user.password;
+		try {
+			await this.usersRepository.save(user);
+		} catch (e) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error saving user to database',
+				},
+			);
+		}
 
-    return {
-      _success: true,
-      user,
-    };
-  }
+		delete user.password;
+
+		return {
+			user,
+		};
+	}
 }
