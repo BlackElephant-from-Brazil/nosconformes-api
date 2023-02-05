@@ -14,7 +14,6 @@ phases:
       - echo Removing unnecessary files...
       - rm -rf node_modules/
 artifacts:
-  type: CODEPIPELINE
   base-directory: '.'
   files:
     - '**/*'
