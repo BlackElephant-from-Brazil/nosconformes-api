@@ -26,4 +26,6 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
 	],
 	controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule {
+	// constructor(private dataSource: DataSource) {}
+}
