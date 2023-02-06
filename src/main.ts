@@ -28,10 +28,10 @@ async function bootstrap() {
 	app.setBaseViewsDir(join(__dirname, 'views'));
 	app.setViewEngine('hbs');
 
-	await app.listen(process.env.PORT || 3333);
+	await app.listen(process.env.PORT || 3000);
 	console.log(
 		`NOSCONFORMES: Application is now running on port: ${
-			process.env.PORT || 3333
+			process.env.PORT || 3000
 		}!!!`,
 	);
 }
