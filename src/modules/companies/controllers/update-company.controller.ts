@@ -60,11 +60,12 @@ export class UpdateCompanyController {
 		@Param('id') companyId: string,
 		@Res() res: Response,
 	) {
-		const company = await this.updateAuditorsFromCompanyService.execute(
-			companyId,
-			auditors,
-		);
+		const availableAuditors =
+			await this.updateAuditorsFromCompanyService.execute(
+				companyId,
+				auditors,
+			);
 
-		res.json(company).status(HttpStatus.OK);
+		res.json(availableAuditors).status(HttpStatus.OK);
 	}
 }
