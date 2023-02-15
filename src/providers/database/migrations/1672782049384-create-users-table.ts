@@ -32,6 +32,11 @@ export class CreateUsersTable1672782049384 implements MigrationInterface {
 						type: 'varchar',
 					},
 					{
+						name: 'phone',
+						type: 'varchar',
+						length: '11',
+					},
+					{
 						name: 'office',
 						type: 'varchar',
 					},

@@ -37,6 +37,8 @@ export class FindUserByIdService {
 			);
 		}
 
+		delete findUser.password;
+
 		return findUser;
 	}
 }

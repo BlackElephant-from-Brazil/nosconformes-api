@@ -26,6 +26,9 @@ export class User {
 	password: string;
 
 	@Column()
+	phone: string;
+
+	@Column()
 	office: string;
 
 	@Column({ name: 'access_level' })
