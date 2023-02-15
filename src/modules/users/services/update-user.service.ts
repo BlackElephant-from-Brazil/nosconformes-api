@@ -15,6 +15,7 @@ export class UpdateUserService {
 		private usersRepository: Repository<User>,
 	) {}
 	async execute(userId: string, userData: UpdateUserDTO): Promise<User> {
+		// TODO: IF RECEIVE THE PASSWORD, VALIDATE AND HASH IT TO SAVE IN THE DATABASE
 		let findUser: User;
 		try {
 			findUser = await this.usersRepository.findOne({
