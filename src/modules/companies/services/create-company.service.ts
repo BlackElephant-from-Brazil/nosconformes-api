@@ -60,7 +60,7 @@ export class CreateCompanyService {
 			);
 		}
 
-		if (!isObjectEmpty(manager) && manager && manager != undefined) {
+		if (manager) {
 			try {
 				const createdManager = this.employeesRepository.create({
 					...manager,
