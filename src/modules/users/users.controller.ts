@@ -29,6 +29,8 @@ export class UsersController {
 		private readonly findUserByIdService: FindUserByIdService,
 	) {}
 
+	// TODO: INSERT ALL JWT VALIDATIONS
+
 	@Post()
 	async create(@Body() createUserDTO: CreateUserDTO, @Res() res: Response) {
 		const createdUser = await this.createUserService.execute(createUserDTO);

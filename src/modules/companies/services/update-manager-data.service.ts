@@ -71,6 +71,8 @@ export class UpdateManagerDataService {
 			);
 		}
 
+		// TODO: IF FOUND BY EMAIL, CHECK IF THE EMAIL IS THE SAME AS THE FOUND MANAGER
+
 		if (!foundManager) {
 			try {
 				const createdManager = this.employeesRepository.create({

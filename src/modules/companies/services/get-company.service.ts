@@ -1,8 +1,12 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from 'src/modules/employees/employee.entity';
 import { User } from 'src/modules/users/users.entity';
-import { Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { Company } from '../companies.entity';
 import { GetCompanyRespDTO } from '../dtos/resp/get-company.resp.dto';
 
@@ -21,34 +25,18 @@ export class GetCompanyService {
 		let foundCompany: Company & {
 			manager?: Employee;
 		};
-		let auditors: User[];
+		let manager: Employee;
+		let availableAuditors: User[];
 
 		try {
 			foundCompany = await this.companiesRepository.findOne({
 				where: {
 					_eq: companyId,
 				},
-			});
-
-			const manager = await this.employeesRepository.findOne({
-				where: {
-					companyId: companyId,
-					accessLevel: 'manager',
+				relations: {
+					auditors: true,
 				},
 			});
-
-			auditors = await this.usersRepository.find({
-				where: [
-					{
-						accessLevel: 'auditor',
-					},
-					{
-						accessLevel: 'master',
-					},
-				],
-			});
-
-			foundCompany.manager = manager;
 		} catch (e) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
@@ -58,6 +46,54 @@ export class GetCompanyService {
 			);
 		}
 
-		return { company: foundCompany, availableAuditors: auditors };
+		if (!foundCompany) {
+			throw new BadRequestException(
+				'Não foi possível encontrar a empresa com o id informado.',
+			);
+		}
+
+		try {
+			manager = await this.employeesRepository.findOne({
+				where: {
+					companyId: companyId,
+					accessLevel: 'manager',
+				},
+			});
+		} catch (e) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error while trying to get manager by id',
+				},
+			);
+		}
+
+		if (manager) foundCompany.manager = manager;
+
+		try {
+			const auditorsIds = foundCompany.auditors.map((a) => a._eq);
+			availableAuditors = await this.usersRepository.find({
+				where: [
+					{
+						accessLevel: 'auditor',
+						_eq: Not(In(auditorsIds)),
+					},
+					{
+						accessLevel: 'master',
+						_eq: Not(In(auditorsIds)),
+					},
+				],
+			});
+		} catch (e) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description:
+						'Error while trying to get availables auditors to company',
+				},
+			);
+		}
+
+		return { company: foundCompany, availableAuditors };
 	}
 }

@@ -33,6 +33,9 @@ export class FindUsersService {
 						office: ILike(resolvedQuery),
 					},
 				],
+				order: {
+					name: 'ASC',
+				},
 			});
 		} catch (error) {
 			throw new InternalServerErrorException(

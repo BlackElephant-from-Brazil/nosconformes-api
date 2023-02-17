@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { User } from '../users.entity';
@@ -9,6 +10,7 @@ export class CreateUserService {
 	constructor(
 		@InjectRepository(User)
 		private usersRepository: Repository<User>,
+		private hashProvider: BCryptProvider,
 	) {}
 
 	async execute({
@@ -18,12 +20,17 @@ export class CreateUserService {
 		office,
 		accessLevel,
 	}: CreateUserDTO): Promise<User> {
+		const defaultPassword = '123456';
+		const hashadPesword = await this.hashProvider.hash({
+			password: defaultPassword,
+		});
 		const createdUser = this.usersRepository.create({
 			profilePicture,
 			name,
 			email,
 			office,
 			accessLevel,
+			password: hashadPesword,
 		});
 
 		try {
