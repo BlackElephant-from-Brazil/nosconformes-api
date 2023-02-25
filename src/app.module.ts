@@ -7,6 +7,9 @@ import { DataSource } from 'typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { EmployeesModule } from './modules/employees/employees.module';
+import { GroupingsModule } from './modules/groupings/groupings.module';
+import { QuestionariesModule } from './modules/questionaries/questionaries.module';
+import { QuestionsModule } from './modules/questions/questions.module';
 import { UsersModule } from './modules/users/users.module';
 import { EncriptationModule } from './providers/encriptation/encriptation.module';
 
@@ -22,6 +25,9 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
 		UsersModule,
 		EncriptationModule,
 		EmployeesModule,
+		QuestionsModule,
+		QuestionariesModule,
+		GroupingsModule,
 	],
 })
 export class AppModule {

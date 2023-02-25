@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/users.entity';
 import { In, Not, Repository } from 'typeorm';
@@ -28,6 +32,12 @@ export class UpdateAuditorsFromCompanyService {
 				{
 					description: 'Error fetching company from database',
 				},
+			);
+		}
+
+		if (!company) {
+			throw new BadRequestException(
+				'Não foi possível encontrar a empresa solicitada.',
 			);
 		}
 
