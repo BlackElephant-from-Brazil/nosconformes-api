@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpStatus,
 	Param,
@@ -12,8 +13,10 @@ import {
 import { Response } from 'express';
 import { EditQuestionaryDTO } from '../dtos/edit-questionary.dto';
 import { CreateQuestionaryService } from '../services/create-questionary.service';
+import { DeleteGroupingFromQuestionaryService } from '../services/delete-grouping-from-questionary.service';
 import { EditQuestionaryService } from '../services/edit-questionary.service';
 import { FindAvailableAuditorsForQuestionaryService } from '../services/find-available-auditors-for-questionary.service';
+import { FindAvailableCompaniesFromQuestionaryService } from '../services/find-available-companies-from-questionary.service';
 import { FindQuestionariesService } from '../services/find-questionaries.service';
 import { FindQuestionaryByIdService } from '../services/find-questionary-by-id.service';
 
@@ -25,6 +28,8 @@ export class QuestionariesController {
 		private readonly editQuestionaryService: EditQuestionaryService,
 		private readonly findQuestionaryByIdService: FindQuestionaryByIdService,
 		private readonly findAvailableAuditorsForQuestionaryService: FindAvailableAuditorsForQuestionaryService,
+		private readonly findAvailableCompaniesFromQuestionaryService: FindAvailableCompaniesFromQuestionaryService,
+		private readonly deleteGroupingFromQuestionaryService: DeleteGroupingFromQuestionaryService,
 	) {}
 
 	@Post()
@@ -72,5 +77,30 @@ export class QuestionariesController {
 				questionaryId,
 			);
 		res.json(availableAuditors).status(HttpStatus.OK);
+	}
+
+	@Get('/available-companies/:id')
+	async findAvailableCompanies(
+		@Param('id') questionaryId: string,
+		@Res() res: Response,
+	) {
+		const availableCompanies =
+			await this.findAvailableCompaniesFromQuestionaryService.execute(
+				questionaryId,
+			);
+		res.json(availableCompanies).status(HttpStatus.OK);
+	}
+
+	@Delete(':questionaryId/groupings/:groupingId')
+	async deleteGrouping(
+		@Param('questionaryId') questionaryId: string,
+		@Param('groupingId') groupingId: string,
+		@Res() res: Response,
+	) {
+		await this.deleteGroupingFromQuestionaryService.execute({
+			groupingId,
+			questionaryId,
+		});
+		res.status(HttpStatus.OK);
 	}
 }
