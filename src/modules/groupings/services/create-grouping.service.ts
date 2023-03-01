@@ -14,7 +14,7 @@ export class CreateGroupingService {
 		private questionariesRepository: Repository<Questionary>,
 	) {}
 
-	async execute({ questionaryId }: CreateGroupingDTO): Promise<string> {
+	async execute({ questionaryId }: CreateGroupingDTO): Promise<Grouping> {
 		const grouping = this.groupingsRepository.create({
 			name: '',
 		});
@@ -64,6 +64,8 @@ export class CreateGroupingService {
 			);
 		}
 
-		return grouping._eq;
+		grouping.questions = [];
+
+		return grouping;
 	}
 }

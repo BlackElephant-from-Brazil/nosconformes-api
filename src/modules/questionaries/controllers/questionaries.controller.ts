@@ -12,11 +12,13 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { EditQuestionaryDTO } from '../dtos/edit-questionary.dto';
+import { AddGroupingToQuestionaryService } from '../services/add-grouping-to-questionary.service';
 import { CreateQuestionaryService } from '../services/create-questionary.service';
 import { DeleteGroupingFromQuestionaryService } from '../services/delete-grouping-from-questionary.service';
 import { EditQuestionaryService } from '../services/edit-questionary.service';
 import { FindAvailableAuditorsForQuestionaryService } from '../services/find-available-auditors-for-questionary.service';
 import { FindAvailableCompaniesFromQuestionaryService } from '../services/find-available-companies-from-questionary.service';
+import { FindAvailableGroupingsFromQuestionaryService } from '../services/find-available-groupings-from-questionary.service';
 import { FindQuestionariesService } from '../services/find-questionaries.service';
 import { FindQuestionaryByIdService } from '../services/find-questionary-by-id.service';
 
@@ -28,8 +30,10 @@ export class QuestionariesController {
 		private readonly editQuestionaryService: EditQuestionaryService,
 		private readonly findQuestionaryByIdService: FindQuestionaryByIdService,
 		private readonly findAvailableAuditorsForQuestionaryService: FindAvailableAuditorsForQuestionaryService,
+		private readonly findAvailableGroupingsFromQuestionaryService: FindAvailableGroupingsFromQuestionaryService,
 		private readonly findAvailableCompaniesFromQuestionaryService: FindAvailableCompaniesFromQuestionaryService,
 		private readonly deleteGroupingFromQuestionaryService: DeleteGroupingFromQuestionaryService,
+		private readonly addGroupingToQuestionaryService: AddGroupingToQuestionaryService,
 	) {}
 
 	@Post()
@@ -91,6 +95,18 @@ export class QuestionariesController {
 		res.json(availableCompanies).status(HttpStatus.OK);
 	}
 
+	@Get('/available-groupings/:id')
+	async findAvailableGroupings(
+		@Param('id') questionaryId: string,
+		@Res() res: Response,
+	) {
+		const availableGroupings =
+			await this.findAvailableGroupingsFromQuestionaryService.execute(
+				questionaryId,
+			);
+		res.json(availableGroupings).status(HttpStatus.OK);
+	}
+
 	@Delete(':questionaryId/groupings/:groupingId')
 	async deleteGrouping(
 		@Param('questionaryId') questionaryId: string,
@@ -101,6 +117,19 @@ export class QuestionariesController {
 			groupingId,
 			questionaryId,
 		});
-		res.status(HttpStatus.OK);
+		res.status(HttpStatus.OK).send();
+	}
+
+	@Put(':questionaryId/groupings/:groupingId')
+	async addGrouping(
+		@Param('questionaryId') questionaryId: string,
+		@Param('groupingId') groupingId: string,
+		@Res() res: Response,
+	) {
+		await this.addGroupingToQuestionaryService.execute({
+			groupingId,
+			questionaryId,
+		});
+		res.status(HttpStatus.OK).send();
 	}
 }

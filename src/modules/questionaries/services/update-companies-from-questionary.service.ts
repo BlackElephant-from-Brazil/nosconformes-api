@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Company } from 'src/modules/companies/companies.entity';
-import { Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { Questionary } from '../questionary.entity';
 
 type UpdateCompaniesFromQuestionaryServiceParams = {
@@ -18,13 +18,16 @@ export class UpdateCompaniesFromQuestionaryService {
 	constructor(
 		@InjectRepository(Questionary)
 		private questionariesRepository: Repository<Questionary>,
+		@InjectRepository(Company)
+		private companiesRepository: Repository<Company>,
 	) {}
 
 	async execute({
 		questionaryId,
 		companies,
-	}: UpdateCompaniesFromQuestionaryServiceParams): Promise<Questionary> {
+	}: UpdateCompaniesFromQuestionaryServiceParams): Promise<Company[]> {
 		let findQuestionary: Questionary;
+		let availableCompanies: Company[];
 
 		try {
 			findQuestionary = await this.questionariesRepository.findOne({
@@ -61,6 +64,22 @@ export class UpdateCompaniesFromQuestionaryService {
 			);
 		}
 
-		return findQuestionary;
+		try {
+			const companiesIds = findQuestionary.companies.map((c) => c._eq);
+			availableCompanies = await this.companiesRepository.find({
+				where: {
+					_eq: Not(In(companiesIds)),
+				},
+			});
+		} catch (error) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description: 'Error fetching companies from database',
+				},
+			);
+		}
+
+		return availableCompanies;
 	}
 }

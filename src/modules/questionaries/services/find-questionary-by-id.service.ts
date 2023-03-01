@@ -20,9 +20,7 @@ export class FindQuestionaryByIdService {
 				relations: {
 					auditors: true,
 					companies: true,
-					groupings: {
-						questions: true,
-					},
+					groupings: true,
 				},
 			});
 		} catch (error) {
