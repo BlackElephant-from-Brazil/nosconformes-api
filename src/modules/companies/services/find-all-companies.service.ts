@@ -4,7 +4,7 @@ import { ILike, Repository } from 'typeorm';
 import { Company } from '../companies.entity';
 
 @Injectable()
-export class FindCompaniesService {
+export class FindAllCompaniesService {
 	constructor(
 		@InjectRepository(Company)
 		private companiesRepository: Repository<Company>,

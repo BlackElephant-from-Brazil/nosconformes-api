@@ -10,16 +10,16 @@ import {
 	Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { AddQuestionsToGroupingDTO } from './dtos/add-questions-to-grouping.dto';
-import { CreateGroupingDTO } from './dtos/create-grouping.dto';
-import { EditGroupingDTO } from './dtos/edit-grouping.dto';
-import { RemoveQuestionsFromGroupingDTO } from './dtos/remove-questions-to-grouping.dto';
-import { AddQuestionsToGroupingService } from './services/add-questions-to-grouping.service';
-import { CreateGroupingService } from './services/create-grouping.service';
-import { EditGroupingService } from './services/edit-grouping.service';
-import { FindAllGroupingsService } from './services/find-all-groupings.service';
-import { FindGroupingByIdService } from './services/find-grouping-by-id.service';
-import { RemoveQuestionsFromGroupingService } from './services/remove-questions-from-grouping.service';
+import { AddQuestionsToGroupingDTO } from '../dtos/add-questions-to-grouping.dto';
+import { CreateGroupingDTO } from '../dtos/create-grouping.dto';
+import { EditGroupingDTO } from '../dtos/edit-grouping.dto';
+import { RemoveQuestionsFromGroupingDTO } from '../dtos/remove-questions-to-grouping.dto';
+import { AddQuestionsToGroupingService } from '../services/add-questions-to-grouping.service';
+import { CreateGroupingService } from '../services/create-grouping.service';
+import { EditGroupingService } from '../services/edit-grouping.service';
+import { FindAllGroupingsService } from '../services/find-all-groupings.service';
+import { FindGroupingByIdService } from '../services/find-grouping-by-id.service';
+import { RemoveQuestionsFromGroupingService } from '../services/remove-questions-from-grouping.service';
 
 @Controller('groupings')
 export class GroupingController {

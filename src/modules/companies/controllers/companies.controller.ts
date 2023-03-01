@@ -13,20 +13,20 @@ import { Response } from 'express';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateCompanyDTO } from '../dtos/create-company.dto';
 import { CreateCompanyService } from '../services/create-company.service';
-import { FindCompaniesService } from '../services/find-companies.service';
-import { GetCompanyService } from '../services/get-company.service';
+import { FindAllCompaniesService } from '../services/find-all-companies.service';
+import { FindCompanyByIdService } from '../services/find-company-by-id.service';
 
 @Controller('companies')
 export class CompaniesController {
 	constructor(
 		private readonly createCompanyService: CreateCompanyService,
-		private readonly findCompaniesService: FindCompaniesService,
-		private readonly getCompaniesService: GetCompanyService,
+		private readonly findAllCompaniesService: FindAllCompaniesService,
+		private readonly findCompanyByIdService: FindCompanyByIdService,
 	) {}
 	@UseGuards(JwtAuthGuard)
 	@Get()
 	async read(@Query('query') query: string, @Res() res: Response) {
-		const companies = await this.findCompaniesService.execute(query);
+		const companies = await this.findAllCompaniesService.execute(query);
 
 		res.json(companies).status(HttpStatus.OK);
 	}
@@ -48,7 +48,7 @@ export class CompaniesController {
 	@Get(':id')
 	async show(@Param('id') companyId: string, @Res() res: Response) {
 		const { company, availableAuditors } =
-			await this.getCompaniesService.execute(companyId);
+			await this.findCompanyByIdService.execute(companyId);
 
 		res.json({ company, availableAuditors }).status(HttpStatus.OK);
 	}

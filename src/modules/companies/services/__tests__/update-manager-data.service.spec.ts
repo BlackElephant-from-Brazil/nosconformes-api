@@ -192,5 +192,34 @@ describe('UpdateManagerDataService', () => {
 				updateManagerDataService.execute(companyId, managerData),
 			).rejects.toThrowError(InternalServerErrorException);
 		});
+
+		it('should throw InternalServerErrorException if error occurred when save manager if it has been found', async () => {
+			const companyId = 'companyId';
+			const managerData = {
+				name: 'managerName',
+				email: 'managerEmail',
+				phone: 'managerPhone',
+				office: 'managerOffice',
+				department: 'managerDepartment',
+			};
+
+			const foundCompany = new Company();
+			const foundManager = new Employee();
+			(companyRepository.findOne as jest.Mock).mockResolvedValue(
+				foundCompany,
+			);
+			(employeeRepository.findOne as jest.Mock).mockResolvedValue(
+				foundManager,
+			);
+			(employeeRepository.create as jest.Mock).mockReturnValue(null);
+			(employeeRepository.save as jest.Mock).mockRejectedValue(
+				new Error(),
+			);
+
+			await expect(
+				updateManagerDataService.execute(companyId, managerData),
+			).rejects.toThrowError(InternalServerErrorException);
+			expect(employeeRepository.create).not.toHaveBeenCalled();
+		});
 	});
 });

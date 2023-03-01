@@ -8,9 +8,9 @@ import {
 	Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { CreateQuestionDTO } from './dtos/create-question.dto';
-import { CreateQuestionService } from './services/create-question.service';
-import { FindQuestionsService } from './services/find-questions.service';
+import { CreateQuestionDTO } from '../dtos/create-question.dto';
+import { CreateQuestionService } from '../services/create-question.service';
+import { FindQuestionsService } from '../services/find-questions.service';
 
 @Controller('questions')
 export class QuestionsController {
