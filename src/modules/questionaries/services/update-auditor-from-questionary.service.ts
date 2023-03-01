@@ -6,57 +6,67 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/users.entity';
 import { In, Not, Repository } from 'typeorm';
-import { Company } from '../companies.entity';
+import { Questionary } from '../questionary.entity';
+
+type UpdateAuditorFromQuestionaryServiceParams = {
+	questionaryId: string;
+	auditors: User[];
+};
 
 @Injectable()
-export class UpdateAuditorsFromCompanyService {
+export class UpdateAuditorFromQuestionaryService {
 	constructor(
-		@InjectRepository(Company)
-		private companiesRepository: Repository<Company>,
+		@InjectRepository(Questionary)
+		private questionariesRepository: Repository<Questionary>,
 		@InjectRepository(User)
 		private usersRepository: Repository<User>,
 	) {}
 
-	async execute(companyId: string, auditors: User[]): Promise<User[]> {
-		let company: Company;
-		let availableAuditors: User[];
+	async execute({
+		questionaryId,
+		auditors,
+	}: UpdateAuditorFromQuestionaryServiceParams): Promise<User[]> {
+		let findQuestionary: Questionary;
+		let availableUsers: User[];
 
 		try {
-			company = await this.companiesRepository.findOne({
-				where: { _eq: companyId },
-				relations: ['auditors'],
+			findQuestionary = await this.questionariesRepository.findOne({
+				where: { _eq: questionaryId },
+				relations: {
+					auditors: true,
+				},
 			});
 		} catch (error) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
-					description: 'Error fetching company from database',
+					description: 'Error fetching questionary from database',
 				},
 			);
 		}
 
-		if (!company) {
+		if (!findQuestionary) {
 			throw new BadRequestException(
-				'Não foi possível encontrar a empresa solicitada.',
+				'Não foi possível encontrar o questionário solicitado.',
 			);
 		}
 
-		company.auditors = auditors;
+		findQuestionary.auditors = auditors;
 
 		try {
-			await this.companiesRepository.save(company);
+			await this.questionariesRepository.save(findQuestionary);
 		} catch (error) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
-					description: 'Error saving company in database',
+					description: 'Error saving questionary in database',
 				},
 			);
 		}
 
 		try {
-			const auditorsIds = company.auditors.map((a) => a._eq);
-			availableAuditors = await this.usersRepository.find({
+			const auditorsIds = findQuestionary.auditors.map((a) => a._eq);
+			availableUsers = await this.usersRepository.find({
 				where: [
 					{
 						accessLevel: 'auditor',
@@ -72,11 +82,11 @@ export class UpdateAuditorsFromCompanyService {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
-					description: 'Error fetching auditors from database',
+					description: 'Error fetching users from database',
 				},
 			);
 		}
 
-		return availableAuditors;
+		return availableUsers;
 	}
 }
