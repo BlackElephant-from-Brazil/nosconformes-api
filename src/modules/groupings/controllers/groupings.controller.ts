@@ -16,7 +16,7 @@ import { EditGroupingDTO } from '../dtos/edit-grouping.dto';
 import { RemoveQuestionsFromGroupingDTO } from '../dtos/remove-questions-to-grouping.dto';
 import { AddQuestionsToGroupingService } from '../services/add-questions-to-grouping.service';
 import { CreateGroupingService } from '../services/create-grouping.service';
-import { EditGroupingService } from '../services/edit-grouping.service';
+import { UpdatingGroupingNameService } from '../services/updating-grouping-name.service';
 import { FindAllGroupingsService } from '../services/find-all-groupings.service';
 import { FindGroupingByIdService } from '../services/find-grouping-by-id.service';
 import { RemoveQuestionsFromGroupingService } from '../services/remove-questions-from-grouping.service';
@@ -25,7 +25,7 @@ import { RemoveQuestionsFromGroupingService } from '../services/remove-questions
 export class GroupingController {
 	constructor(
 		private readonly createGroupingService: CreateGroupingService,
-		private readonly editGroupingService: EditGroupingService,
+		private readonly updatingGroupingNameService: UpdatingGroupingNameService,
 		private readonly findGroupingByIdService: FindGroupingByIdService,
 		private readonly addQuestionsToGroupingService: AddQuestionsToGroupingService,
 		private readonly findAllGroupingsService: FindAllGroupingsService,
@@ -49,7 +49,7 @@ export class GroupingController {
 		@Body() editGroupingDTO: EditGroupingDTO,
 		@Res() res: Response,
 	) {
-		await this.editGroupingService.execute({
+		await this.updatingGroupingNameService.execute({
 			...editGroupingDTO,
 			groupingId,
 		});

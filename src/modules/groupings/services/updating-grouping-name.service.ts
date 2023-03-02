@@ -7,13 +7,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Grouping } from '../grouping.entity';
 
-type EditGroupingServiceParams = {
+type UpdatingGroupingNameServiceParams = {
 	groupingId: string;
 	name: string;
 };
 
 @Injectable()
-export class EditGroupingService {
+export class UpdatingGroupingNameService {
 	constructor(
 		@InjectRepository(Grouping)
 		private groupingsRepository: Repository<Grouping>,
@@ -22,7 +22,7 @@ export class EditGroupingService {
 	async execute({
 		name,
 		groupingId,
-	}: EditGroupingServiceParams): Promise<void> {
+	}: UpdatingGroupingNameServiceParams): Promise<void> {
 		let findGrouping: Grouping;
 		try {
 			findGrouping = await this.groupingsRepository.findOne({
