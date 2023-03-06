@@ -1,18 +1,18 @@
 import { Test } from '@nestjs/testing';
 import { InternalServerErrorException } from '@nestjs/common';
-import { FindCompaniesService } from '../find-companies.service';
+import { FindAllCompaniesService } from '../find-all-companies.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Company } from '../../companies.entity';
 import { ILike, Repository } from 'typeorm';
 
 describe('FindCompaniesService', () => {
-	let findCompaniesService: FindCompaniesService;
+	let findCompaniesService: FindAllCompaniesService;
 	let companiesRepository: Repository<Company>;
 
 	beforeEach(async () => {
 		const testingModule = await Test.createTestingModule({
 			providers: [
-				FindCompaniesService,
+				FindAllCompaniesService,
 				{
 					provide: getRepositoryToken(Company),
 					useValue: {
@@ -22,8 +22,9 @@ describe('FindCompaniesService', () => {
 			],
 		}).compile();
 
-		findCompaniesService =
-			testingModule.get<FindCompaniesService>(FindCompaniesService);
+		findCompaniesService = testingModule.get<FindAllCompaniesService>(
+			FindAllCompaniesService,
+		);
 		companiesRepository = testingModule.get<Repository<Company>>(
 			getRepositoryToken(Company),
 		);

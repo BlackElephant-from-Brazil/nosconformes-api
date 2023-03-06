@@ -1,110 +1,122 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 import { InternalServerErrorException } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../../users.entity';
 import { CreateUserService } from '../create-user.service';
+import { User } from '../../users.entity';
+import { CreateUserDTO } from '../../dtos/create-user.dto';
 
 describe('CreateUserService', () => {
 	let createUserService: CreateUserService;
-	let usersRepository: Repository<User>;
+
+	const mockUsersRepository = {
+		create: jest.fn(),
+		save: jest.fn(),
+	};
+
+	const mockBcryptProvider = {
+		hash: jest.fn(),
+	};
 
 	beforeEach(async () => {
-		const testingModule = await Test.createTestingModule({
+		const moduleRef: TestingModule = await Test.createTestingModule({
 			providers: [
 				CreateUserService,
 				{
 					provide: getRepositoryToken(User),
-					useValue: {
-						create: jest.fn(),
-						save: jest.fn(),
-					},
+					useValue: mockUsersRepository,
+				},
+				{
+					provide: BCryptProvider,
+					useValue: mockBcryptProvider,
 				},
 			],
 		}).compile();
 
-		createUserService =
-			testingModule.get<CreateUserService>(CreateUserService);
-		usersRepository = testingModule.get<Repository<User>>(
-			getRepositoryToken(User),
-		);
+		createUserService = moduleRef.get<CreateUserService>(CreateUserService);
 	});
 
 	afterEach(() => {
-		jest.clearAllMocks();
-	});
-
-	it('should be defined', () => {
-		expect(createUserService).toBeDefined();
+		jest.resetAllMocks();
 	});
 
 	describe('execute', () => {
-		it('should throw internal server error exception if an error occurs while trying to save the user', async () => {
-			jest.spyOn(usersRepository, 'create').mockReturnValue({
-				name: 'John Doe',
-				email: 'johndoe@email.com',
-				accessLevel: 'auditor',
-				office: 'office',
-				profilePicture: 'profile-picture',
-			} as User);
-			jest.spyOn(usersRepository, 'save').mockRejectedValue(new Error());
+		const mockCreateUserDTO: CreateUserDTO = {
+			name: 'John Doe',
+			email: 'john.doe@example.com',
+			office: 'Developer',
+			accessLevel: 'auditor',
+			profilePicture: 'image.png',
+		};
 
-			await expect(
-				createUserService.execute({
-					name: 'John Doe',
-					email: 'johndoe@email.com',
-					accessLevel: 'auditor',
-					office: 'office',
-					profilePicture: 'profile-picture',
-				}),
-			).rejects.toThrowError(InternalServerErrorException);
-			expect(usersRepository.save).toHaveBeenCalledWith({
-				name: 'John Doe',
-				email: 'johndoe@email.com',
-				accessLevel: 'auditor',
-				office: 'office',
-				profilePicture: 'profile-picture',
+		const mockHash = '123abc';
+
+		it('should create a new user successfully', async () => {
+			mockBcryptProvider.hash.mockResolvedValue(mockHash);
+
+			const mockCreatedUser = {
+				...mockCreateUserDTO,
+				password: mockHash,
+			};
+
+			mockUsersRepository.create.mockReturnValue(mockCreatedUser);
+
+			const mockSavedUser = {
+				...mockCreatedUser,
+				id: '1',
+				createdAt: new Date(),
+				updatedAt: new Date(),
+			};
+
+			mockUsersRepository.save.mockResolvedValue(mockSavedUser);
+
+			const result = await createUserService.execute(mockCreateUserDTO);
+
+			expect(result).toEqual({
+				...mockCreateUserDTO,
+				id: mockSavedUser.id,
+				createdAt: mockSavedUser.createdAt,
+				updatedAt: mockSavedUser.updatedAt,
 			});
+
+			expect(mockBcryptProvider.hash).toHaveBeenCalledWith({
+				password: '123456',
+			});
+
+			expect(mockUsersRepository.create).toHaveBeenCalledWith({
+				...mockCreateUserDTO,
+				password: mockHash,
+			});
+
+			expect(mockUsersRepository.save).toHaveBeenCalledWith(
+				mockCreatedUser,
+			);
 		});
 
-		it('should return the created user if everythin looks great', async () => {
-			jest.spyOn(usersRepository, 'create').mockReturnValue({
-				name: 'John Doe',
-				email: 'johndoe@email.com',
-				accessLevel: 'auditor',
-				office: 'office',
-				profilePicture: 'profile-picture',
-			} as User);
+		it('should throw an InternalServerErrorException if the save method throws an error', async () => {
+			mockBcryptProvider.hash.mockResolvedValue(mockHash);
 
-			jest.spyOn(usersRepository, 'save').mockResolvedValue({
-				name: 'John Doe',
-				email: 'johndoe@email.com',
-				accessLevel: 'auditor',
-				office: 'office',
-				profilePicture: 'profile-picture',
-			} as User);
+			const mockCreatedUser = {
+				...mockCreateUserDTO,
+				password: mockHash,
+			};
 
-			const user = await createUserService.execute({
-				name: 'John Doe',
-				email: 'johndoe@email.com',
-				accessLevel: 'auditor',
-				office: 'office',
-				profilePicture: 'profile-picture',
-			});
-			expect(user).toEqual({
-				name: 'John Doe',
-				email: 'johndoe@email.com',
-				accessLevel: 'auditor',
-				office: 'office',
-				profilePicture: 'profile-picture',
-			});
-			expect(usersRepository.save).toHaveBeenCalledWith({
-				name: 'John Doe',
-				email: 'johndoe@email.com',
-				accessLevel: 'auditor',
-				office: 'office',
-				profilePicture: 'profile-picture',
-			});
+			mockUsersRepository.create.mockReturnValue(mockCreatedUser);
+
+			const errorMessage = 'Error saving user';
+			mockUsersRepository.save.mockRejectedValue(new Error(errorMessage));
+
+			await expect(
+				createUserService.execute(mockCreateUserDTO),
+			).rejects.toThrow(
+				new InternalServerErrorException(
+					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+					{
+						description:
+							'This error occurred when trying to save the user in the create-user.service.ts',
+					},
+				),
+			);
 		});
 	});
 });

@@ -33,8 +33,10 @@ export class CreateUserService {
 			password: hashadPesword,
 		});
 
+		let savedUser: User;
+
 		try {
-			await this.usersRepository.save(createdUser);
+			savedUser = await this.usersRepository.save(createdUser);
 		} catch (error) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
@@ -46,7 +48,8 @@ export class CreateUserService {
 		}
 
 		delete createdUser.password;
+		delete savedUser.password;
 
-		return createdUser;
+		return savedUser;
 	}
 }

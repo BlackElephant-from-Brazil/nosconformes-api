@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Grouping } from 'src/modules/groupings/grouping.entity';
-import { In, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Questionary } from '../questionary.entity';
 
 type AddGroupingToQuestionaryServiceParams = {

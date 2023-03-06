@@ -54,7 +54,6 @@ export class FindAvailableCompaniesFromQuestionaryService {
 				},
 			});
 		} catch (error) {
-			console.log(error);
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{

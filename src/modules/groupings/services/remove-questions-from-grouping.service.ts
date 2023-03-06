@@ -18,8 +18,6 @@ export class RemoveQuestionsFromGroupingService {
 	constructor(
 		@InjectRepository(Grouping)
 		private groupingsRepository: Repository<Grouping>,
-		@InjectRepository(Question)
-		private questionsRepository: Repository<Question>,
 	) {}
 
 	async execute({

@@ -11,13 +11,13 @@ import {
 	Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { UpdateUserDTO } from '../companies/dtos/req/update-user.dto';
-import { CreateUserDTO } from './dtos/create-user.dto';
-import { CreateUserService } from './services/create-user.service';
-import { DeleteUserService } from './services/delete-user.service';
-import { FindUserByIdService } from './services/find-user-by-id.service';
-import { FindUsersService } from './services/find-users.service';
-import { UpdateUserService } from './services/update-user.service';
+import { UpdateUserDTO } from '../../companies/dtos/req/update-user.dto';
+import { CreateUserDTO } from '../dtos/create-user.dto';
+import { CreateUserService } from '../services/create-user.service';
+import { DeleteUserService } from '../services/delete-user.service';
+import { FindUserByIdService } from '../services/find-user-by-id.service';
+import { FindUsersService } from '../services/find-users.service';
+import { UpdateUserService } from '../services/update-user.service';
 
 @Controller('users')
 export class UsersController {
