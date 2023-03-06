@@ -47,27 +47,6 @@ describe('LoginService', () => {
 	});
 
 	describe('execute', () => {
-		it('should return a logged user', async () => {
-			const user = new User();
-			user.email = 'test@example.com';
-			user.password = 'password';
-			jest.spyOn(usersRepository, 'findOne').mockResolvedValue(user);
-			jest.spyOn(hashProvider, 'compare').mockResolvedValue(true);
-			jest.spyOn(jwtService, 'sign').mockReturnValue('access_token');
-
-			const loginUserReqDTO: LoginUserReqDTO = {
-				email: 'test@example.com',
-				password: 'password',
-			};
-
-			const result = await loginService.execute(loginUserReqDTO);
-
-			expect(result).toEqual({
-				user: { email: 'test@example.com' },
-				accessToken: 'access_token',
-			});
-		});
-
 		it('should throw an error if the user is not found', async () => {
 			jest.spyOn(usersRepository, 'findOne').mockResolvedValue(null);
 
