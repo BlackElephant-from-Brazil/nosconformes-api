@@ -16,7 +16,6 @@ import { AddGroupingToQuestionaryService } from '../services/add-grouping-to-que
 import { CreateQuestionaryService } from '../services/create-questionary.service';
 import { DeleteGroupingFromQuestionaryService } from '../services/delete-grouping-from-questionary.service';
 import { EditQuestionaryService } from '../services/edit-questionary.service';
-import { FindAvailableAuditorsForQuestionaryService } from '../services/find-available-auditors-for-questionary.service';
 import { FindAvailableCompaniesFromQuestionaryService } from '../services/find-available-companies-from-questionary.service';
 import { FindAvailableGroupingsFromQuestionaryService } from '../services/find-available-groupings-from-questionary.service';
 import { FindQuestionariesService } from '../services/find-questionaries.service';
@@ -29,7 +28,6 @@ export class QuestionariesController {
 		private readonly createQuestionaryService: CreateQuestionaryService,
 		private readonly editQuestionaryService: EditQuestionaryService,
 		private readonly findQuestionaryByIdService: FindQuestionaryByIdService,
-		private readonly findAvailableAuditorsForQuestionaryService: FindAvailableAuditorsForQuestionaryService,
 		private readonly findAvailableGroupingsFromQuestionaryService: FindAvailableGroupingsFromQuestionaryService,
 		private readonly findAvailableCompaniesFromQuestionaryService: FindAvailableCompaniesFromQuestionaryService,
 		private readonly deleteGroupingFromQuestionaryService: DeleteGroupingFromQuestionaryService,
@@ -69,18 +67,6 @@ export class QuestionariesController {
 			questionaryId,
 		);
 		res.json(questionary).status(HttpStatus.OK);
-	}
-
-	@Get('/available-auditors/:id')
-	async findAvailableAuditors(
-		@Param('id') questionaryId: string,
-		@Res() res: Response,
-	) {
-		const availableAuditors =
-			await this.findAvailableAuditorsForQuestionaryService.execute(
-				questionaryId,
-			);
-		res.json(availableAuditors).status(HttpStatus.OK);
 	}
 
 	@Get('/available-companies/:id')

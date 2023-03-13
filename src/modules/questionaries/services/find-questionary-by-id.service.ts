@@ -18,7 +18,6 @@ export class FindQuestionaryByIdService {
 					_eq: questionaryId,
 				},
 				relations: {
-					auditors: true,
 					companies: true,
 					groupings: true,
 				},

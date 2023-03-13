@@ -47,9 +47,10 @@ export class CompaniesController {
 	@UseGuards(JwtAuthGuard)
 	@Get(':id')
 	async show(@Param('id') companyId: string, @Res() res: Response) {
-		const { company, availableAuditors } =
-			await this.findCompanyByIdService.execute(companyId);
+		const foundCompany = await this.findCompanyByIdService.execute(
+			companyId,
+		);
 
-		res.json({ company, availableAuditors }).status(HttpStatus.OK);
+		res.json(foundCompany).status(HttpStatus.OK);
 	}
 }

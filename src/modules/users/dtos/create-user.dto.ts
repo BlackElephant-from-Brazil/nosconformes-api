@@ -4,4 +4,5 @@ export type CreateUserDTO = {
 	email: string;
 	office: string;
 	accessLevel: 'master' | 'manager' | 'auditor' | 'consultor';
+	phone: string;
 };

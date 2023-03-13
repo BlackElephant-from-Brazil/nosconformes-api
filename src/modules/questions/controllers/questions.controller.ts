@@ -3,6 +3,7 @@ import {
 	Controller,
 	Get,
 	HttpStatus,
+	Param,
 	Post,
 	Query,
 	Res,
@@ -10,6 +11,7 @@ import {
 import { Response } from 'express';
 import { CreateQuestionDTO } from '../dtos/create-question.dto';
 import { CreateQuestionService } from '../services/create-question.service';
+import { FindQuestionByIdService } from '../services/find-question-by-id.service';
 import { FindQuestionsService } from '../services/find-questions.service';
 
 @Controller('questions')
@@ -17,6 +19,7 @@ export class QuestionsController {
 	constructor(
 		private readonly createQuestionService: CreateQuestionService,
 		private readonly findQuestionsService: FindQuestionsService,
+		private readonly findQuestionByIdService: FindQuestionByIdService,
 	) {}
 
 	@Post()
@@ -34,5 +37,12 @@ export class QuestionsController {
 	async find(@Query('query') query: string, @Res() res: Response) {
 		const questions = await this.findQuestionsService.execute(query);
 		res.json(questions).status(HttpStatus.OK);
+	}
+
+	@Get(':id')
+	async show(@Param('id') questionId: string, @Res() res: Response) {
+		console.log(questionId);
+		const question = await this.findQuestionByIdService.execute(questionId);
+		res.json(question).status(HttpStatus.OK);
 	}
 }

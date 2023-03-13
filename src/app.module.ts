@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from 'src/config/configuration';
 import { databaseConfigurations } from 'src/providers/database/typeorm-datasource';
 import { DataSource } from 'typeorm';
+import { AuditorsAreaModule } from './modules/auditors-area/auditors-area.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { EmployeesModule } from './modules/employees/employees.module';
@@ -28,6 +29,7 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
 		QuestionsModule,
 		QuestionariesModule,
 		GroupingsModule,
+		AuditorsAreaModule,
 	],
 })
 export class AppModule {

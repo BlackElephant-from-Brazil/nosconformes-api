@@ -2,14 +2,16 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	JoinTable,
 	ManyToMany,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import { Company } from '../companies/companies.entity';
 import { Grouping } from '../groupings/grouping.entity';
-import { User } from '../users/users.entity';
+import { QuestionariesCompanies } from './questionaries-companies.entity';
 
 @Entity('questionaries')
 export class Questionary {
@@ -19,29 +21,30 @@ export class Questionary {
 	@Column()
 	name: string;
 
-	@ManyToMany(() => User, { cascade: true })
-	@JoinTable({
-		name: 'questionaries_auditors',
-		joinColumn: { name: 'questionary_id' },
-		inverseJoinColumn: { name: 'auditor_id' },
-	})
-	auditors: User[];
-
 	@ManyToMany(() => Company, { cascade: true })
 	@JoinTable({
 		name: 'questionaries_companies',
-		joinColumn: { name: 'questionary_id' },
-		inverseJoinColumn: { name: 'company_id' },
+		joinColumn: { name: 'questionary_id', referencedColumnName: '_eq' },
+		inverseJoinColumn: { name: 'company_id', referencedColumnName: '_eq' },
 	})
 	companies: Company[];
 
 	@ManyToMany(() => Grouping, { cascade: true })
 	@JoinTable({
 		name: 'questionaries_groupings',
-		joinColumn: { name: 'questionary_id' },
-		inverseJoinColumn: { name: 'grouping_id' },
+		joinColumn: { name: 'questionary_id', referencedColumnName: '_eq' },
+		inverseJoinColumn: { name: 'grouping_id', referencedColumnName: '_eq' },
 	})
 	groupings: Grouping[];
+
+	@OneToMany(
+		() => QuestionariesCompanies,
+		(questionariesCompanies) => questionariesCompanies.questionary,
+		{
+			cascade: true,
+		},
+	)
+	public questionariesCompanies: QuestionariesCompanies[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

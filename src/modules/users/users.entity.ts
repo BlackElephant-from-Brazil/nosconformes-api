@@ -2,11 +2,15 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinTable,
+	ManyToMany,
 	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import { Protocol } from '../protocol/protocol.entity';
+import { QuestionariesCompanies } from '../questionaries/questionaries-companies.entity';
+// import { QuestionariesCompanies } from '../questionaries/questionaries-companies.entity';
 
 @Entity('users')
 export class User {
@@ -36,6 +40,14 @@ export class User {
 
 	@OneToMany(() => Protocol, (protocol) => protocol.user)
 	protocols: Protocol[];
+
+	@ManyToMany(() => QuestionariesCompanies, { cascade: true })
+	@JoinTable({
+		name: 'questionaries_companies_auditors',
+		joinColumn: { name: 'auditor_id' },
+		inverseJoinColumn: { name: 'questionary_company_id' },
+	})
+	questionariesCompanies: QuestionariesCompanies[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

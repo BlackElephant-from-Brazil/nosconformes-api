@@ -51,7 +51,7 @@ export class UpdateCompaniesFromQuestionaryService {
 			);
 		}
 
-		findQuestionary.companies = companies;
+		findQuestionary.companies = [...companies];
 
 		try {
 			await this.questionariesRepository.save(findQuestionary);

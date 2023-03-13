@@ -26,7 +26,6 @@ export class FindAllCompaniesService {
 					},
 				],
 				relations: {
-					auditors: true,
 					employees: true,
 				},
 			});

@@ -1,15 +1,15 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateQuestionariesAuditorsTable1677241595313
+export class CreateQuestionariesCompaniesAuditorsTable1678288473131
 	implements MigrationInterface
 {
 	public async up(queryRunner: QueryRunner): Promise<void> {
 		await queryRunner.createTable(
 			new Table({
-				name: 'questionaries_auditors',
+				name: 'questionaries_companies_auditors',
 				columns: [
 					{
-						name: 'questionary_id',
+						name: 'questionary_company_id',
 						type: 'uuid',
 					},
 					{
@@ -19,15 +19,15 @@ export class CreateQuestionariesAuditorsTable1677241595313
 				],
 				foreignKeys: [
 					{
-						name: 'QuestionaryQuestionariesAuditors',
-						referencedTableName: 'questionaries',
+						name: 'QuestionariesCompaniesQuestionariesCompaniesAuditors',
+						referencedTableName: 'questionaries_companies',
 						referencedColumnNames: ['_eq'],
-						columnNames: ['questionary_id'],
+						columnNames: ['questionary_company_id'],
 						onDelete: 'CASCADE',
 						onUpdate: 'CASCADE',
 					},
 					{
-						name: 'AuditorQuestionariesAuditors',
+						name: 'AuditorQuestionariesCompaniesAuditors',
 						referencedTableName: 'users',
 						referencedColumnNames: ['_eq'],
 						columnNames: ['auditor_id'],
@@ -40,6 +40,6 @@ export class CreateQuestionariesAuditorsTable1677241595313
 	}
 
 	public async down(queryRunner: QueryRunner): Promise<void> {
-		await queryRunner.dropTable('questionaries_auditors');
+		await queryRunner.dropTable('questionaries_companies_auditors');
 	}
 }

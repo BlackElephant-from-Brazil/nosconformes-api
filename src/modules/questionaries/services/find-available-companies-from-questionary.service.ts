@@ -35,7 +35,7 @@ export class FindAvailableCompaniesFromQuestionaryService {
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
 					description:
-						'This error occurred when trying to find the questionaries in the find-available-auditors-for-questionary.service.ts',
+						'This error occurred when trying to find the questionaries in the find-available-companies-for-questionary.service.ts',
 				},
 			);
 		}

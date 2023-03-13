@@ -9,6 +9,13 @@ export class CreateQuestionariesCompaniesTable1677241604242
 				name: 'questionaries_companies',
 				columns: [
 					{
+						name: '_eq',
+						type: 'uuid',
+						isPrimary: true,
+						generationStrategy: 'uuid',
+						default: 'uuid_generate_v4()',
+					},
+					{
 						name: 'questionary_id',
 						type: 'uuid',
 					},

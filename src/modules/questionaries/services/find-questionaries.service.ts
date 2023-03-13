@@ -22,7 +22,6 @@ export class FindQuestionariesService {
 					name: 'ASC',
 				},
 				relations: {
-					auditors: true,
 					companies: true,
 					groupings: true,
 				},
