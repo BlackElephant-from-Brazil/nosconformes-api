@@ -9,7 +9,6 @@ import {
 	Length,
 	Matches,
 	ValidateNested,
-	IsEmpty,
 	IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -140,5 +139,5 @@ export class CreateCompanyDTO {
 	@ValidateNested()
 	@Type(() => Manager)
 	@IsOptional()
-	manager?: Manager | object | null;
+	manager?: Manager | null;
 }
