@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from 'src/config/configuration';
 import { databaseConfigurations } from 'src/providers/database/typeorm-datasource';
 import { DataSource } from 'typeorm';
+import { UploadsController } from './app.controller';
 import { AuditorsAreaModule } from './modules/auditors-area/auditors-area.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CompaniesModule } from './modules/companies/companies.module';
@@ -31,6 +32,7 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
 		GroupingsModule,
 		AuditorsAreaModule,
 	],
+	controllers: [UploadsController],
 })
 export class AppModule {
 	constructor(private dataSource: DataSource) {}

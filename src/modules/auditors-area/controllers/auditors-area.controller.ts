@@ -1,12 +1,8 @@
 import {
-	Body,
 	Controller,
-	Delete,
 	Get,
 	HttpStatus,
 	Param,
-	Post,
-	Put,
 	Query,
 	Req,
 	Res,
@@ -18,6 +14,7 @@ import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { FindAvailableCompaniesForAuditor } from '../services/find-available-companies-for-auditor.service';
 import { FindAvailableQuestionariesForAuditor } from '../services/find-available-questionaries-for-auditor.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('auditors-area')
 export class AuditorsAreaController {
 	constructor(

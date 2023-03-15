@@ -7,13 +7,16 @@ import {
 	Post,
 	Query,
 	Res,
+	UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CreateQuestionDTO } from '../dtos/create-question.dto';
 import { CreateQuestionService } from '../services/create-question.service';
 import { FindQuestionByIdService } from '../services/find-question-by-id.service';
 import { FindQuestionsService } from '../services/find-questions.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('questions')
 export class QuestionsController {
 	constructor(

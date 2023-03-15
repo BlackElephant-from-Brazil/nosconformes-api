@@ -12,13 +12,13 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { UpdateCompaniesFromQuestionaryDTO } from '../dtos/update-companies-from-questionary.dto';
 import { UpdateCompaniesFromQuestionaryService } from '../services/update-companies-from-questionary.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('questionaries')
 export class UpdateQuestionaryController {
 	constructor(
 		private readonly updateCompaniesFromQuestionaryService: UpdateCompaniesFromQuestionaryService,
 	) {}
 
-	@UseGuards(JwtAuthGuard)
 	@Put('/companies/:id')
 	async updateCompanies(
 		@Body() { companies }: UpdateCompaniesFromQuestionaryDTO,

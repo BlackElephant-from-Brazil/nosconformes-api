@@ -8,6 +8,7 @@ import {
 	Post,
 	Put,
 	Res,
+	UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AddQuestionsToGroupingDTO } from '../dtos/add-questions-to-grouping.dto';
@@ -20,7 +21,9 @@ import { UpdatingGroupingNameService } from '../services/updating-grouping-name.
 import { FindAllGroupingsService } from '../services/find-all-groupings.service';
 import { FindGroupingByIdService } from '../services/find-grouping-by-id.service';
 import { RemoveQuestionsFromGroupingService } from '../services/remove-questions-from-grouping.service';
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('groupings')
 export class GroupingController {
 	constructor(

@@ -3,5 +3,5 @@ export type UpdateUserDTO = {
 	name: string;
 	email: string;
 	office: string;
-	accessLevel: 'master' | 'manager' | 'auditor' | 'consultor';
+	accessLevel: 'master' | 'gestor' | 'auditor' | 'consultor';
 };

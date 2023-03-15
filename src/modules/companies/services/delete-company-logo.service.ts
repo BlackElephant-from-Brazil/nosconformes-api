@@ -4,25 +4,19 @@ import {
 	InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Employee } from 'src/modules/employees/employee.entity';
 import { Repository } from 'typeorm';
 import { Company } from '../companies.entity';
+import * as fs from 'fs';
 
 @Injectable()
-export class FindCompanyByIdService {
+export class DeleteCompanyLogoService {
 	constructor(
 		@InjectRepository(Company)
 		private companiesRepository: Repository<Company>,
-		@InjectRepository(Employee)
-		private employeesRepository: Repository<Employee>,
 	) {}
 
-	async execute(companyId: string): Promise<Company> {
-		let foundCompany: Company & {
-			manager?: Employee;
-		};
-		let manager: Employee;
-
+	async execute(companyId: string) {
+		let foundCompany: Company;
 		try {
 			foundCompany = await this.companiesRepository.findOne({
 				where: {
@@ -44,24 +38,20 @@ export class FindCompanyByIdService {
 			);
 		}
 
+		const filename = foundCompany.logo.split('uploads/')[1];
+		fs.unlinkSync(`uploads/${filename}`);
+
+		foundCompany.logo = '';
+
 		try {
-			manager = await this.employeesRepository.findOne({
-				where: {
-					companyId: companyId,
-					accessLevel: 'manager',
-				},
-			});
+			await this.companiesRepository.save(foundCompany);
 		} catch (e) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
-					description: 'Error while trying to get manager by id',
+					description: 'Error while trying to save company',
 				},
 			);
 		}
-
-		if (manager) foundCompany.manager = manager;
-
-		return foundCompany;
 	}
 }

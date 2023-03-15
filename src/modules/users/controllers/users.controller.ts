@@ -9,16 +9,25 @@ import {
 	Put,
 	Query,
 	Res,
+	UploadedFile,
+	UseGuards,
+	UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { diskStorage } from 'multer';
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { UpdateUserDTO } from '../../companies/dtos/req/update-user.dto';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { CreateUserService } from '../services/create-user.service';
+import { DeleteUserPhotoService } from '../services/delete-user-photo.service';
 import { DeleteUserService } from '../services/delete-user.service';
 import { FindUserByIdService } from '../services/find-user-by-id.service';
 import { FindUsersService } from '../services/find-users.service';
+import { UpdateUserPhotoService } from '../services/update-user-photo.service';
 import { UpdateUserService } from '../services/update-user.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
 	constructor(
@@ -27,9 +36,9 @@ export class UsersController {
 		private readonly updateUserService: UpdateUserService,
 		private readonly deleteUserService: DeleteUserService,
 		private readonly findUserByIdService: FindUserByIdService,
+		private readonly deleteUserPhotoService: DeleteUserPhotoService,
+		private readonly updateUserPhotoService: UpdateUserPhotoService,
 	) {}
-
-	// TODO: INSERT ALL JWT VALIDATIONS
 
 	@Post()
 	async create(@Body() createUserDTO: CreateUserDTO, @Res() res: Response) {
@@ -66,5 +75,37 @@ export class UsersController {
 	async show(@Param('id') userId: string, @Res() res: Response) {
 		const users = await this.findUserByIdService.execute(userId);
 		res.json(users).status(HttpStatus.OK);
+	}
+
+	@Delete(':id/logo')
+	async deletePhoto(@Param('id') userId: string, @Res() res: Response) {
+		await this.deleteUserPhotoService.execute(userId);
+
+		res.status(HttpStatus.OK).send();
+	}
+
+	@Post(':id/logo')
+	@UseInterceptors(
+		FileInterceptor('photo', {
+			storage: diskStorage({
+				destination: './uploads',
+				filename: (req, file, cb) => {
+					const filename = `${Date.now()}-${file.originalname}`;
+					cb(null, filename);
+				},
+			}),
+		}),
+	)
+	async uploadLogo(
+		@Param('id') companyId: string,
+		@UploadedFile() photo: Express.Multer.File,
+		@Res() res: Response,
+	) {
+		const uploadedLogoUrl = await this.updateUserPhotoService.execute(
+			companyId,
+			photo.path,
+		);
+
+		res.json(uploadedLogoUrl).status(HttpStatus.OK);
 	}
 }
