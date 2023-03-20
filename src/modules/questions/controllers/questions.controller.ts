@@ -37,9 +37,16 @@ export class QuestionsController {
 	}
 
 	@Get()
-	async find(@Query('query') query: string, @Res() res: Response) {
-		const questions = await this.findQuestionsService.execute(query);
-		res.json(questions).status(HttpStatus.OK);
+	async find(
+		@Query('query') query: string,
+		@Query('page') page = 1,
+		@Res() res: Response,
+	) {
+		const paginatedFindQuestions = await this.findQuestionsService.execute(
+			page,
+			query,
+		);
+		res.json(paginatedFindQuestions).status(HttpStatus.OK);
 	}
 
 	@Get(':id')

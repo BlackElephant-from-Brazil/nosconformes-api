@@ -38,8 +38,10 @@ export class DeleteCompanyLogoService {
 			);
 		}
 
-		const filename = foundCompany.logo.split('uploads/')[1];
-		fs.unlinkSync(`uploads/${filename}`);
+		if (foundCompany.logo) {
+			const filename = foundCompany.logo.split('uploads/')[1];
+			fs.unlinkSync(`uploads/${filename}`);
+		}
 
 		foundCompany.logo = '';
 

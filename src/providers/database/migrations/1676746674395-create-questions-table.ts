@@ -40,16 +40,24 @@ export class CreateQuestionsTable1676746674395 implements MigrationInterface {
 						type: 'varchar',
 					},
 					{
-						name: 'accordingButtons',
-						type: 'text',
-						isArray: true,
-						default: 'array[]::text[]',
+						name: 'priority',
+						type: 'smallint',
 					},
 					{
-						name: 'partialAccordingButtons',
-						type: 'text',
-						isArray: true,
-						default: 'array[]::text[]',
+						name: 'probability',
+						type: 'smallint',
+					},
+					{
+						name: 'impact',
+						type: 'smallint',
+					},
+					{
+						name: 'partial_according_allow_information',
+						type: 'boolean',
+					},
+					{
+						name: 'non_according_allow_information',
+						type: 'boolean',
 					},
 					{
 						name: 'created_at',

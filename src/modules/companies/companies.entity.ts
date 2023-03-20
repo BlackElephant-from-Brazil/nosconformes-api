@@ -39,7 +39,7 @@ export class Company {
 			cascade: true,
 		},
 	)
-	public questionariesCompanies: QuestionariesCompanies[];
+	questionariesCompanies: QuestionariesCompanies[];
 
 	@ManyToMany(() => Questionary)
 	@JoinTable({

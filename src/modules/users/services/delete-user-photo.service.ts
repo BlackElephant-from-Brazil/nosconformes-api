@@ -38,8 +38,10 @@ export class DeleteUserPhotoService {
 			);
 		}
 
-		const filename = foundUser.profilePicture.split('uploads/')[1];
-		fs.unlinkSync(`uploads/${filename}`);
+		if (!foundUser.profilePicture) {
+			const filename = foundUser.profilePicture.split('uploads/')[1];
+			fs.unlinkSync(`uploads/${filename}`);
+		}
 
 		foundUser.profilePicture = '';
 

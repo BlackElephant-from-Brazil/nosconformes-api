@@ -77,14 +77,14 @@ export class UsersController {
 		res.json(users).status(HttpStatus.OK);
 	}
 
-	@Delete(':id/logo')
+	@Delete(':id/photo')
 	async deletePhoto(@Param('id') userId: string, @Res() res: Response) {
 		await this.deleteUserPhotoService.execute(userId);
 
 		res.status(HttpStatus.OK).send();
 	}
 
-	@Post(':id/logo')
+	@Post(':id/photo')
 	@UseInterceptors(
 		FileInterceptor('photo', {
 			storage: diskStorage({
@@ -101,11 +101,11 @@ export class UsersController {
 		@UploadedFile() photo: Express.Multer.File,
 		@Res() res: Response,
 	) {
-		const uploadedLogoUrl = await this.updateUserPhotoService.execute(
+		const uploadedPhotoUrl = await this.updateUserPhotoService.execute(
 			companyId,
 			photo.path,
 		);
 
-		res.json(uploadedLogoUrl).status(HttpStatus.OK);
+		res.json(uploadedPhotoUrl).status(HttpStatus.OK);
 	}
 }
