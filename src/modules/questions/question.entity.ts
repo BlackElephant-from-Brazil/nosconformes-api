@@ -24,9 +24,8 @@ export class Question {
 	@Column()
 	question: string;
 
-	// TODO: VERIFY IF THIS IS THE CORRECT TYPE
-	@Column({ type: 'text', array: true })
-	funcs: string[];
+	@Column()
+	func: string;
 
 	@Column()
 	threat: string;
@@ -63,7 +62,7 @@ export class Question {
 	})
 	references: Reference[];
 
-	@ManyToMany(() => Reference, { cascade: true })
+	@ManyToMany(() => Tag, { cascade: true })
 	@JoinTable({
 		name: 'questions_tags',
 		joinColumn: { name: 'question_id', referencedColumnName: '_eq' },

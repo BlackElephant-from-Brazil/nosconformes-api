@@ -22,10 +22,8 @@ export class CreateQuestionsTable1676746674395 implements MigrationInterface {
 						type: 'varchar',
 					},
 					{
-						name: 'funcs',
-						type: 'text',
-						isArray: true,
-						default: 'array[]::text[]',
+						name: 'func',
+						type: 'varchar',
 					},
 					{
 						name: 'threat',

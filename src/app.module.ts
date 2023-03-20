@@ -12,6 +12,8 @@ import { EmployeesModule } from './modules/employees/employees.module';
 import { GroupingsModule } from './modules/groupings/groupings.module';
 import { QuestionariesModule } from './modules/questionaries/questionaries.module';
 import { QuestionsModule } from './modules/questions/questions.module';
+import { ReferencesModule } from './modules/references/references.module';
+import { TagsModule } from './modules/tags/tags.module';
 import { UsersModule } from './modules/users/users.module';
 import { EncriptationModule } from './providers/encriptation/encriptation.module';
 
@@ -31,6 +33,8 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
 		QuestionariesModule,
 		GroupingsModule,
 		AuditorsAreaModule,
+		TagsModule,
+		ReferencesModule,
 	],
 	controllers: [UploadsController],
 })

@@ -1,6 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { isUUID } from 'class-validator';
 import { AccordingButton } from 'src/modules/according-buttons/according-button.entity';
+import { Grouping } from 'src/modules/groupings/grouping.entity';
 import { PartialAccordingButton } from 'src/modules/partial-according-buttons/partial-according-button.entity';
 import { Reference } from 'src/modules/references/reference.entity';
 import { Tag } from 'src/modules/tags/tag.entity';
@@ -21,17 +23,23 @@ export class CreateQuestionService {
 		private accordingButtonsRepository: Repository<AccordingButton>,
 		@InjectRepository(PartialAccordingButton)
 		private partialAccordingButtonsRepository: Repository<PartialAccordingButton>,
+		@InjectRepository(Grouping)
+		private groupingsRepository: Repository<Grouping>,
 	) {}
 
 	async execute(createQuestionDTO: CreateQuestionDTO): Promise<Question> {
+		console.log(createQuestionDTO);
 		let tags: Tag[] = [];
 		let references: Reference[] = [];
 		let accordingButtons: AccordingButton[] = [];
 		let partialAccordingButtons: PartialAccordingButton[] = [];
+		let groupings: Grouping[] = [];
 		try {
 			tags = await this.tagsRepository.find({
 				where: {
-					_eq: In(createQuestionDTO.tags),
+					_eq: In(
+						createQuestionDTO.tags.filter((tag) => isUUID(tag)),
+					),
 				},
 			});
 		} catch (err) {
@@ -66,7 +74,11 @@ export class CreateQuestionService {
 		try {
 			references = await this.referencesRepository.find({
 				where: {
-					_eq: In(createQuestionDTO.references),
+					_eq: In(
+						createQuestionDTO.references.filter((reference) =>
+							isUUID(reference),
+						),
+					),
 				},
 			});
 		} catch (err) {
@@ -98,24 +110,29 @@ export class CreateQuestionService {
 			}
 		});
 
-		accordingButtons = createQuestionDTO.accordingButtons.map((ab) => {
-			return this.accordingButtonsRepository.create({
-				label: ab,
+		try {
+			groupings = await this.groupingsRepository.find({
+				where: {
+					_eq: In(createQuestionDTO.groupings),
+				},
+				relations: {
+					questions: true,
+				},
 			});
-		});
-
-		partialAccordingButtons = createQuestionDTO.partialAccordingButtons.map(
-			(pab) => {
-				return this.partialAccordingButtonsRepository.create({
-					label: pab,
-				});
-			},
-		);
+		} catch (err) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description:
+						'This error occurred when trying to find the groupings in the create-question.service.ts',
+				},
+			);
+		}
 
 		const question = this.questionsRepository.create({
 			id: createQuestionDTO.id,
 			question: createQuestionDTO.question,
-			funcs: createQuestionDTO.funcs,
+			func: createQuestionDTO.func,
 			threat: createQuestionDTO.threat,
 			recommendation: createQuestionDTO.recommendation,
 			description: createQuestionDTO.description,
@@ -126,13 +143,15 @@ export class CreateQuestionService {
 				createQuestionDTO.partialAccordingAllowInformation,
 			nonAccordingAllowInformation:
 				createQuestionDTO.nonAccordingAllowInformation,
-			tags,
-			references,
 		});
+
+		question.tags = tags;
+		question.references = references;
 
 		try {
 			await this.questionsRepository.save(question);
 		} catch (err) {
+			console.log(err);
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
@@ -142,31 +161,58 @@ export class CreateQuestionService {
 			);
 		}
 
-		accordingButtons.map(async (ab) => {
-			ab.questionId = question.id;
-			try {
-				await this.accordingButtonsRepository.save(ab);
-			} catch (err) {
-				throw new InternalServerErrorException(
-					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
-					{
-						description:
-							'This error occurred when trying to save the according button in the create-question.service.ts',
-					},
-				);
-			}
+		accordingButtons = createQuestionDTO.accordingButtons.map((ab) => {
+			return this.accordingButtonsRepository.create({
+				label: ab,
+				questionId: question._eq,
+			});
 		});
 
-		partialAccordingButtons.map(async (pab) => {
-			pab.questionId = question.id;
+		partialAccordingButtons = createQuestionDTO.partialAccordingButtons.map(
+			(pab) => {
+				return this.partialAccordingButtonsRepository.create({
+					label: pab,
+					questionId: question._eq,
+				});
+			},
+		);
+
+		try {
+			await this.accordingButtonsRepository.save(accordingButtons);
+		} catch (err) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description:
+						'This error occurred when trying to save the according button in the create-question.service.ts',
+				},
+			);
+		}
+
+		try {
+			await this.partialAccordingButtonsRepository.save(
+				partialAccordingButtons,
+			);
+		} catch (err) {
+			throw new InternalServerErrorException(
+				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				{
+					description:
+						'This error occurred when trying to save the partial according button in the create-question.service.ts',
+				},
+			);
+		}
+
+		groupings.map(async (g) => {
+			g.questions.push(question);
 			try {
-				await this.partialAccordingButtonsRepository.save(pab);
+				await this.groupingsRepository.save(g);
 			} catch (err) {
 				throw new InternalServerErrorException(
 					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 					{
 						description:
-							'This error occurred when trying to save the partial according button in the create-question.service.ts',
+							'This error occurred when trying to save the grouping in the create-question.service.ts',
 					},
 				);
 			}

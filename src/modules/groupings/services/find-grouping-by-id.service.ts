@@ -23,7 +23,10 @@ export class FindGroupingByIdService {
 					_eq: groupingId,
 				},
 				relations: {
-					questions: true,
+					questions: {
+						tags: true,
+						references: true,
+					},
 				},
 			});
 		} catch (error) {
