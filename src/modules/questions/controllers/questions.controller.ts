@@ -15,6 +15,7 @@ import { CreateQuestionDTO } from '../dtos/create-question.dto';
 import { CreateQuestionService } from '../services/create-question.service';
 import { FindQuestionByIdService } from '../services/find-question-by-id.service';
 import { FindQuestionsService } from '../services/find-questions.service';
+import { GenerateNewIdService } from '../services/generate-new-id.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('questions')
@@ -23,6 +24,7 @@ export class QuestionsController {
 		private readonly createQuestionService: CreateQuestionService,
 		private readonly findQuestionsService: FindQuestionsService,
 		private readonly findQuestionByIdService: FindQuestionByIdService,
+		private readonly generateNewIdService: GenerateNewIdService,
 	) {}
 
 	@Post()
@@ -47,6 +49,12 @@ export class QuestionsController {
 			query,
 		);
 		res.json(paginatedFindQuestions).status(HttpStatus.OK);
+	}
+
+	@Get('/new-id')
+	async newId(@Res() res: Response) {
+		const newId = await this.generateNewIdService.execute();
+		res.json(newId).status(HttpStatus.OK);
 	}
 
 	@Get(':id')
