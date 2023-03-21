@@ -12,7 +12,7 @@ export class GenerateNewIdService {
 
 	async execute(): Promise<string> {
 		let quantityCreatedQuestionsToday: number;
-		const today = new Date(); // criar um objeto Date com a data atual
+		const today = new Date();
 		const startOfDay = new Date(
 			today.getFullYear(),
 			today.getMonth(),
