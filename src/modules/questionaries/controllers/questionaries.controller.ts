@@ -9,8 +9,10 @@ import {
 	Put,
 	Query,
 	Res,
+	UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { EditQuestionaryDTO } from '../dtos/edit-questionary.dto';
 import { AddGroupingToQuestionaryService } from '../services/add-grouping-to-questionary.service';
 import { CreateQuestionaryService } from '../services/create-questionary.service';
@@ -21,6 +23,7 @@ import { FindAvailableGroupingsFromQuestionaryService } from '../services/find-a
 import { FindQuestionariesService } from '../services/find-questionaries.service';
 import { FindQuestionaryByIdService } from '../services/find-questionary-by-id.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('questionaries')
 export class QuestionariesController {
 	constructor(

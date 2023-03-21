@@ -2,7 +2,6 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinColumn,
 	JoinTable,
 	ManyToMany,
 	OneToMany,
@@ -44,7 +43,7 @@ export class Questionary {
 			cascade: true,
 		},
 	)
-	public questionariesCompanies: QuestionariesCompanies[];
+	questionariesCompanies: QuestionariesCompanies[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

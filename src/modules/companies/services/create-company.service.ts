@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from 'src/modules/employees/employee.entity';
-import { isObjectEmpty } from 'src/utils/is-object-empty';
 import { Repository } from 'typeorm';
 import { Company } from '../companies.entity';
 import { CreateCompanyDTO } from '../dtos/create-company.dto';
@@ -61,6 +60,33 @@ export class CreateCompanyService {
 		}
 
 		if (manager) {
+			let foundManager: Employee;
+
+			try {
+				foundManager = await this.employeesRepository.findOne({
+					where: {
+						email: manager.email,
+					},
+					relations: {
+						company: true,
+					},
+				});
+			} catch (e) {
+				throw new InternalServerErrorException(
+					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+					{
+						description:
+							'The error occurred when trying to find some manager with existant email',
+					},
+				);
+			}
+
+			if (foundManager) {
+				throw new BadRequestException(
+					`O email já está cadastrado na plataforma para a empresa ${foundManager.company.name}`,
+				);
+			}
+
 			try {
 				const createdManager = this.employeesRepository.create({
 					...manager,

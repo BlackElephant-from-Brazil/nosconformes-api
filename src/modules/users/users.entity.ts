@@ -36,7 +36,7 @@ export class User {
 	office: string;
 
 	@Column({ name: 'access_level' })
-	accessLevel: 'master' | 'manager' | 'auditor' | 'consultor';
+	accessLevel: 'master' | 'gestor' | 'auditor' | 'consultor';
 
 	@OneToMany(() => Protocol, (protocol) => protocol.user)
 	protocols: Protocol[];

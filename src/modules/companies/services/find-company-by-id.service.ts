@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from 'src/modules/employees/employee.entity';
-import { User } from 'src/modules/users/users.entity';
 import { Repository } from 'typeorm';
 import { Company } from '../companies.entity';
 
@@ -16,8 +15,6 @@ export class FindCompanyByIdService {
 		private companiesRepository: Repository<Company>,
 		@InjectRepository(Employee)
 		private employeesRepository: Repository<Employee>,
-		@InjectRepository(User)
-		private usersRepository: Repository<User>,
 	) {}
 
 	async execute(companyId: string): Promise<Company> {

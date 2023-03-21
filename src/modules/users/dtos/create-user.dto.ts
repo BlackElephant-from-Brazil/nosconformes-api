@@ -3,6 +3,6 @@ export type CreateUserDTO = {
 	name: string;
 	email: string;
 	office: string;
-	accessLevel: 'master' | 'manager' | 'auditor' | 'consultor';
+	accessLevel: 'master' | 'gestor' | 'auditor' | 'consultor';
 	phone: string;
 };

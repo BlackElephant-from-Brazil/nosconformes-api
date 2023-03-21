@@ -53,7 +53,7 @@ describe('FindUsersService', () => {
 				where: [
 					{
 						accessLevel: ILike(`%${query}%`) as
-							| FindOperator<'manager'>
+							| FindOperator<'gestor'>
 							| FindOperator<'auditor'>
 							| FindOperator<'master'>
 							| FindOperator<'consultor'>,
@@ -84,7 +84,7 @@ describe('FindUsersService', () => {
 				where: [
 					{
 						accessLevel: ILike(`%${query}%`) as
-							| FindOperator<'manager'>
+							| FindOperator<'gestor'>
 							| FindOperator<'auditor'>
 							| FindOperator<'master'>
 							| FindOperator<'consultor'>,
