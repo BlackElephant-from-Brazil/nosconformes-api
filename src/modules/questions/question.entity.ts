@@ -2,13 +2,17 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	JoinTable,
 	ManyToMany,
 	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import { AccordingButton } from '../according-buttons/according-button.entity';
+import { Answer } from '../answers/answer.entity';
+import { Grouping } from '../groupings/grouping.entity';
 import { PartialAccordingButton } from '../partial-according-buttons/partial-according-button.entity';
 import { Reference } from '../references/reference.entity';
 import { Tag } from '../tags/tag.entity';
@@ -86,6 +90,20 @@ export class Question {
 		{ cascade: true },
 	)
 	accordingButtons: AccordingButton[];
+
+	@ManyToMany(() => Grouping, { cascade: true })
+	@JoinTable({
+		name: 'groupings_questions',
+		joinColumn: { name: 'questions_id' },
+		inverseJoinColumn: { name: 'grouping_id' },
+	})
+	groupings: Grouping[];
+
+	@OneToOne(() => Answer, (answer) => answer.question, {
+		cascade: true,
+		nullable: true,
+	})
+	answer?: Answer;
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

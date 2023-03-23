@@ -8,6 +8,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
+import { Message } from '../messages/message.entity';
 import { Protocol } from '../protocol/protocol.entity';
 import { QuestionariesCompanies } from '../questionaries/questionaries-companies.entity';
 // import { QuestionariesCompanies } from '../questionaries/questionaries-companies.entity';
@@ -48,6 +49,9 @@ export class User {
 		inverseJoinColumn: { name: 'questionary_company_id' },
 	})
 	questionariesCompanies: QuestionariesCompanies[];
+
+	@OneToMany(() => Message, (message) => message.user)
+	messages: Message[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

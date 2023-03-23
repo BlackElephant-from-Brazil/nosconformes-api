@@ -5,11 +5,13 @@ import configuration from 'src/config/configuration';
 import { databaseConfigurations } from 'src/providers/database/typeorm-datasource';
 import { DataSource } from 'typeorm';
 import { UploadsController } from './app.controller';
+import { AnswersModule } from './modules/answers/answers.module';
 import { AuditorsAreaModule } from './modules/auditors-area/auditors-area.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { GroupingsModule } from './modules/groupings/groupings.module';
+import { MessagesModule } from './modules/messages/messages.module';
 import { QuestionariesModule } from './modules/questionaries/questionaries.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { ReferencesModule } from './modules/references/references.module';
@@ -35,6 +37,8 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
 		AuditorsAreaModule,
 		TagsModule,
 		ReferencesModule,
+		MessagesModule,
+		AnswersModule,
 	],
 	controllers: [UploadsController],
 })

@@ -25,6 +25,8 @@ export class Grouping {
 	})
 	questions: Question[];
 
+	percentage?: number;
+
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;
 
