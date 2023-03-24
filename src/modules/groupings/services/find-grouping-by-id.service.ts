@@ -26,6 +26,7 @@ export class FindGroupingByIdService {
 					questions: {
 						tags: true,
 						references: true,
+						answer: true,
 					},
 				},
 			});
@@ -44,6 +45,15 @@ export class FindGroupingByIdService {
 				'Não foi possível encontrar o agrupamento informado.',
 			);
 		}
+
+		const quantityQuestionsInGroupig = findGrouping.questions.length;
+		const quantityAnsweredQuestions = findGrouping.questions.filter(
+			(question) => question.answer,
+		).length;
+
+		findGrouping.percentage = Math.round(
+			(quantityAnsweredQuestions / quantityQuestionsInGroupig) * 100,
+		);
 
 		return findGrouping;
 	}

@@ -20,12 +20,6 @@ export class Answer {
 	@Column()
 	conformity: 'conform' | 'partial' | 'non-conform';
 
-	@Column({ type: 'text', array: true })
-	confirmingFiles: string[];
-
-	@Column({ type: 'text', array: true })
-	partialConformingFiles: string[];
-
 	@Column({ name: 'company_id' })
 	companyId: string;
 
