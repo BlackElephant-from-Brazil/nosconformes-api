@@ -19,6 +19,9 @@ export class Employee {
 	@Column()
 	name: string;
 
+	@Column({ name: 'profile_picture' })
+	profilePicture: string;
+
 	@Column()
 	office: string;
 
@@ -26,7 +29,7 @@ export class Employee {
 	department: string;
 
 	@Column({ name: 'access_level' })
-	accessLevel: 'manager' | 'employee';
+	accessLevel: 'patrocinador' | 'stackholder';
 
 	@Column()
 	email: string;

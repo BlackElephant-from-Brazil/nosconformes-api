@@ -48,7 +48,7 @@ export class FindCompanyByIdService {
 			manager = await this.employeesRepository.findOne({
 				where: {
 					companyId: companyId,
-					accessLevel: 'manager',
+					accessLevel: 'patrocinador',
 				},
 			});
 		} catch (e) {

@@ -6,58 +6,58 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
-import { User } from '../users.entity';
+import { Employee } from '../employee.entity';
 
 @Injectable()
-export class UpdateUserPhotoService {
+export class UpdateEmployeePhotoService {
 	constructor(
-		@InjectRepository(User)
-		private usersRepository: Repository<User>,
+		@InjectRepository(Employee)
+		private employeesRepository: Repository<Employee>,
 	) {}
 
-	async execute(userId: string, photoPath: string): Promise<string> {
-		let foundUser: User;
+	async execute(employeeId: string, photoPath: string): Promise<string> {
+		let foundEmployee: Employee;
 		try {
-			foundUser = await this.usersRepository.findOne({
+			foundEmployee = await this.employeesRepository.findOne({
 				where: {
-					_eq: userId,
+					_eq: employeeId,
 				},
 			});
 		} catch (e) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
-					description: 'Error while trying to get user by id',
+					description: 'Error while trying to get employee by id',
 				},
 			);
 		}
 
-		if (!foundUser) {
+		if (!foundEmployee) {
 			throw new BadRequestException(
 				'Não foi possível encontrar o usuário informado.',
 			);
 		}
 
-		if (foundUser.profilePicture) {
-			const filename = foundUser.profilePicture.split('uploads/')[1];
+		if (foundEmployee.profilePicture) {
+			const filename = foundEmployee.profilePicture.split('uploads/')[1];
 			fs.unlinkSync(`uploads/${filename}`);
 		}
 
-		foundUser.profilePicture = `${process.env.BASE_URL}:${
+		foundEmployee.profilePicture = `${process.env.BASE_URL}:${
 			process.env.PORT || 3333
 		}/${photoPath}`;
 
 		try {
-			await this.usersRepository.save(foundUser);
+			await this.employeesRepository.save(foundEmployee);
 		} catch (e) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
-					description: 'Error while trying to save company',
+					description: 'Error while trying to save employee',
 				},
 			);
 		}
 
-		return foundUser.profilePicture;
+		return foundEmployee.profilePicture;
 	}
 }

@@ -17,7 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { UpdateUserDTO } from '../../companies/dtos/req/update-user.dto';
+import { UpdateUserDTO } from '../dtos/update-user.dto';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { CreateUserService } from '../services/create-user.service';
 import { DeleteUserPhotoService } from '../services/delete-user-photo.service';
