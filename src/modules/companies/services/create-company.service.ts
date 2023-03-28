@@ -90,7 +90,7 @@ export class CreateCompanyService {
 			try {
 				const createdManager = this.employeesRepository.create({
 					...manager,
-					accessLevel: 'manager',
+					accessLevel: 'patrocinador',
 					companyId: createdCompany._eq,
 				});
 				await this.employeesRepository.save(createdManager);

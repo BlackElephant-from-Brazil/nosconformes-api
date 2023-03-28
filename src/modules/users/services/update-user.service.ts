@@ -4,8 +4,8 @@ import {
 	InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateUserDTO } from 'src/modules/companies/dtos/req/update-user.dto';
 import { Repository } from 'typeorm';
+import { UpdateUserDTO } from '../dtos/update-user.dto';
 import { User } from '../users.entity';
 
 @Injectable()
