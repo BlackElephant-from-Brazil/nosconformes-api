@@ -4,6 +4,7 @@ import { UpdatingGroupingNameService } from './updating-grouping-name.service';
 import { FindAllGroupingsService } from './find-all-groupings.service';
 import { FindGroupingByIdService } from './find-grouping-by-id.service';
 import { RemoveQuestionsFromGroupingService } from './remove-questions-from-grouping.service';
+import { FindAllGroupingsFromQuestionaryForCompanyService } from './find-all-groupings-from-questionary-for-company.service';
 
 export const groupingsService = [
 	CreateGroupingService,
@@ -12,4 +13,5 @@ export const groupingsService = [
 	AddQuestionsToGroupingService,
 	FindAllGroupingsService,
 	RemoveQuestionsFromGroupingService,
+	FindAllGroupingsFromQuestionaryForCompanyService,
 ];

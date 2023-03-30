@@ -22,6 +22,10 @@ export class CreateCompaniesTable1672866368425 implements MigrationInterface {
 						type: 'varchar',
 					},
 					{
+						name: 'sector',
+						type: 'varchar',
+					},
+					{
 						name: 'cnpj',
 						type: 'varchar',
 					},

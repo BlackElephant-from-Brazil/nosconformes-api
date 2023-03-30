@@ -24,6 +24,9 @@ export class Company {
 	name: string;
 
 	@Column()
+	sector: string;
+
+	@Column()
 	cnpj: string;
 
 	@Column()
