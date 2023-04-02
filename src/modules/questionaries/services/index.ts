@@ -2,6 +2,7 @@ import { AddGroupingToQuestionaryService } from './add-grouping-to-questionary.s
 import { CreateQuestionaryService } from './create-questionary.service';
 import { DeleteGroupingFromQuestionaryService } from './delete-grouping-from-questionary.service';
 import { EditQuestionaryService } from './edit-questionary.service';
+import { FindAllQuestionariesFromCompanyByIdService } from './find-all-questionaries-from-company-by-id.service';
 import { FindAvailableCompaniesFromQuestionaryService } from './find-available-companies-from-questionary.service';
 import { FindAvailableGroupingsFromQuestionaryService } from './find-available-groupings-from-questionary.service';
 import { FindQuestionariesService } from './find-questionaries.service';
@@ -18,4 +19,5 @@ export const questionariesService = [
 	DeleteGroupingFromQuestionaryService,
 	FindAvailableGroupingsFromQuestionaryService,
 	AddGroupingToQuestionaryService,
+	FindAllQuestionariesFromCompanyByIdService,
 ];

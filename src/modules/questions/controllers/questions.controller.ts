@@ -59,7 +59,6 @@ export class QuestionsController {
 
 	@Get(':id')
 	async show(@Param('id') questionId: string, @Res() res: Response) {
-		console.log(questionId);
 		const question = await this.findQuestionByIdService.execute(questionId);
 		res.json(question).status(HttpStatus.OK);
 	}
