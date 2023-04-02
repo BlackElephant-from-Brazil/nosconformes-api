@@ -3,6 +3,7 @@ import {
 	Get,
 	HttpStatus,
 	Param,
+	Query,
 	Res,
 	UseGuards,
 } from '@nestjs/common';
@@ -18,10 +19,15 @@ export class QuestionariesCompanyController {
 	) {}
 
 	@Get(':companyId/company')
-	async findAll(@Param('companyId') companyId: string, @Res() res: Response) {
+	async findAll(
+		@Param('companyId') companyId: string,
+		@Query('query') query: string,
+		@Res() res: Response,
+	) {
 		const questionaries =
 			await this.findAllQuestionariesFromCompanyByIdService.execute(
 				companyId,
+				query,
 			);
 		res.json(questionaries).status(HttpStatus.OK);
 	}

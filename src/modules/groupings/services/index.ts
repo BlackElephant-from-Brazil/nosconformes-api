@@ -5,6 +5,7 @@ import { FindAllGroupingsService } from './find-all-groupings.service';
 import { FindGroupingByIdService } from './find-grouping-by-id.service';
 import { RemoveQuestionsFromGroupingService } from './remove-questions-from-grouping.service';
 import { FindAllGroupingsFromQuestionaryForCompanyService } from './find-all-groupings-from-questionary-for-company.service';
+import { FindGroupingByIdForCompanyService } from './find-grouping-by-id-for-company.service';
 
 export const groupingsService = [
 	CreateGroupingService,
@@ -14,4 +15,5 @@ export const groupingsService = [
 	FindAllGroupingsService,
 	RemoveQuestionsFromGroupingService,
 	FindAllGroupingsFromQuestionaryForCompanyService,
+	FindGroupingByIdForCompanyService,
 ];

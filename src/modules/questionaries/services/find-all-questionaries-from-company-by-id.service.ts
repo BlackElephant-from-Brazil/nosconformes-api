@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Company } from 'src/modules/companies/companies.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Questionary } from '../questionary.entity';
 
 @Injectable()
@@ -17,7 +17,8 @@ export class FindAllQuestionariesFromCompanyByIdService {
 		private questionariesRepository: Repository<Questionary>,
 	) {}
 
-	async execute(companyId: string): Promise<Questionary[]> {
+	async execute(companyId: string, query?: string): Promise<Questionary[]> {
+		const resolvedQuery = query ? `%${query}%` : '%%';
 		let foundCompany: Company;
 		let foundQuestionaries: Questionary[];
 
@@ -44,6 +45,7 @@ export class FindAllQuestionariesFromCompanyByIdService {
 		try {
 			foundQuestionaries = await this.questionariesRepository.find({
 				where: {
+					name: ILike(resolvedQuery),
 					companies: {
 						_eq: companyId,
 					},
@@ -62,11 +64,3 @@ export class FindAllQuestionariesFromCompanyByIdService {
 		return foundQuestionaries;
 	}
 }
-
-// throw new InternalServerErrorException(
-// 	'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
-// 	{
-// 		description:
-// 			'This error occurred when trying to find the companies in the find-available-companies-for-questionary.service.ts',
-// 	},
-// );
