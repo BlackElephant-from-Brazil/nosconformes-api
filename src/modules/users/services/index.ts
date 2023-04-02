@@ -1,4 +1,5 @@
 import { CreateUserService } from './create-user.service';
+import { CreateMainUserService } from './create.main.user.service';
 import { DeleteUserPhotoService } from './delete-user-photo.service';
 import { DeleteUserService } from './delete-user.service';
 import { FindUserByIdService } from './find-user-by-id.service';
@@ -14,4 +15,5 @@ export const usersServices = [
 	UpdateUserService,
 	DeleteUserPhotoService,
 	UpdateUserPhotoService,
+	CreateMainUserService,
 ];
