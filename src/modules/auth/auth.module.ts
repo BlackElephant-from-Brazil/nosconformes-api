@@ -13,6 +13,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Protocol } from '../protocol/protocol.entity';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
+import { Employee } from '../employees/employee.entity';
 
 config();
 
@@ -26,7 +27,7 @@ const configService = new ConfigService();
 			secret: JWT_SECRET_KEY,
 			signOptions: { expiresIn: '10h' },
 		}),
-		TypeOrmModule.forFeature([User, Protocol]),
+		TypeOrmModule.forFeature([User, Protocol, Employee]),
 		MailerModule.forRoot({
 			transport: {
 				host: 'smtp.mailgun.org',

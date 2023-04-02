@@ -2,11 +2,16 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinTable,
+	ManyToMany,
 	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
+import { Message } from '../messages/message.entity';
 import { Protocol } from '../protocol/protocol.entity';
+import { QuestionariesCompanies } from '../questionaries/questionaries-companies.entity';
+// import { QuestionariesCompanies } from '../questionaries/questionaries-companies.entity';
 
 @Entity('users')
 export class User {
@@ -32,10 +37,21 @@ export class User {
 	office: string;
 
 	@Column({ name: 'access_level' })
-	accessLevel: 'master' | 'manager' | 'auditor' | 'consultor';
+	accessLevel: 'master' | 'gestor' | 'auditor' | 'consultor';
 
 	@OneToMany(() => Protocol, (protocol) => protocol.user)
 	protocols: Protocol[];
+
+	@ManyToMany(() => QuestionariesCompanies, { cascade: true })
+	@JoinTable({
+		name: 'questionaries_companies_auditors',
+		joinColumn: { name: 'auditor_id' },
+		inverseJoinColumn: { name: 'questionary_company_id' },
+	})
+	questionariesCompanies: QuestionariesCompanies[];
+
+	@OneToMany(() => Message, (message) => message.user)
+	messages: Message[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

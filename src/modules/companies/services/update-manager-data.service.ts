@@ -58,7 +58,7 @@ export class UpdateManagerDataService {
 			foundManager = await this.employeesRepository.findOne({
 				where: {
 					companyId,
-					accessLevel: 'manager',
+					accessLevel: 'patrocinador',
 				},
 			});
 		} catch (err) {
@@ -76,7 +76,7 @@ export class UpdateManagerDataService {
 		if (!foundManager) {
 			try {
 				const createdManager = this.employeesRepository.create({
-					accessLevel: 'manager',
+					accessLevel: 'patrocinador',
 					companyId,
 					department: managerData.department,
 					email: managerData.email,

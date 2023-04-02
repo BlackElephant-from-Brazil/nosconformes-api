@@ -9,7 +9,8 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 import { Employee } from '../employees/employee.entity';
-import { User } from '../users/users.entity';
+import { QuestionariesCompanies } from '../questionaries/questionaries-companies.entity';
+import { Questionary } from '../questionaries/questionary.entity';
 
 @Entity('companies')
 export class Company {
@@ -23,6 +24,9 @@ export class Company {
 	name: string;
 
 	@Column()
+	sector: string;
+
+	@Column()
 	cnpj: string;
 
 	@Column()
@@ -31,13 +35,25 @@ export class Company {
 	@OneToMany(() => Employee, (employee) => employee.company)
 	employees: Employee[];
 
-	@ManyToMany(() => User)
+	@OneToMany(
+		() => QuestionariesCompanies,
+		(questionariesCompanies) => questionariesCompanies.company,
+		{
+			cascade: true,
+		},
+	)
+	questionariesCompanies: QuestionariesCompanies[];
+
+	@ManyToMany(() => Questionary)
 	@JoinTable({
-		name: 'companies_auditors',
-		joinColumn: { name: 'company_id' },
-		inverseJoinColumn: { name: 'auditor_id' },
+		name: 'questionaries_companies',
+		joinColumn: { name: 'company_id', referencedColumnName: '_eq' },
+		inverseJoinColumn: {
+			name: 'questionary_id',
+			referencedColumnName: '_eq',
+		},
 	})
-	auditors: User[];
+	questionaries: Questionary[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

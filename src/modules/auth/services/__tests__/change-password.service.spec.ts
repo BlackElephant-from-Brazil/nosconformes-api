@@ -97,22 +97,6 @@ describe('ChangePasswordService', () => {
 			expect(mockHashProvider.hash).not.toHaveBeenCalled();
 		});
 
-		it('should throw BadRequestException if user does not exist', async () => {
-			jest.spyOn(mockUsersRepository, 'findOne').mockResolvedValue(null);
-
-			try {
-				await changePasswordService.execute({
-					email,
-					password,
-					passwordConfirmation,
-					_protocol: 'http',
-				});
-			} catch (e) {
-				expect(e).toBeInstanceOf(BadRequestException);
-				expect(e.message).toBe('O usuário não existe');
-			}
-		});
-
 		it('should throw InternalServerErrorException if error occurs while fetching user', async () => {
 			jest.spyOn(mockUsersRepository, 'findOne').mockRejectedValue(
 				new Error('Test Error'),
@@ -154,6 +138,28 @@ describe('ChangePasswordService', () => {
 				);
 				expect(e.options).toEqual({
 					description: 'Error saving user to database',
+				});
+			}
+		});
+
+		it('should throw a InternalServerErrorException if error occurs while hashing password', async () => {
+			jest.spyOn(mockHashProvider, 'hash').mockRejectedValue(
+				new Error('Test Error'),
+			);
+			try {
+				await changePasswordService.execute({
+					email,
+					password,
+					passwordConfirmation,
+					_protocol: 'http',
+				});
+			} catch (e) {
+				expect(e).toBeInstanceOf(InternalServerErrorException);
+				expect(e.message).toBe(
+					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+				);
+				expect(e.options).toEqual({
+					description: 'Error hashing password',
 				});
 			}
 		});

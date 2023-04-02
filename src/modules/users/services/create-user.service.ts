@@ -19,9 +19,10 @@ export class CreateUserService {
 		email,
 		office,
 		accessLevel,
+		phone,
 	}: CreateUserDTO): Promise<User> {
 		const defaultPassword = '123456';
-		const hashadPesword = await this.hashProvider.hash({
+		const hashedPesword = await this.hashProvider.hash({
 			password: defaultPassword,
 		});
 		const createdUser = this.usersRepository.create({
@@ -30,11 +31,14 @@ export class CreateUserService {
 			email,
 			office,
 			accessLevel,
-			password: hashadPesword,
+			password: hashedPesword,
+			phone,
 		});
 
+		let savedUser: User;
+
 		try {
-			await this.usersRepository.save(createdUser);
+			savedUser = await this.usersRepository.save(createdUser);
 		} catch (error) {
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
@@ -46,7 +50,8 @@ export class CreateUserService {
 		}
 
 		delete createdUser.password;
+		delete savedUser.password;
 
-		return createdUser;
+		return savedUser;
 	}
 }

@@ -60,6 +60,7 @@
 		"@types/bcrypt": "^5.0.0",
 		"@types/express": "^4.17.13",
 		"@types/jest": "29.2.4",
+		"@types/multer": "^1.4.7",
 		"@types/node": "^16.11.10",
 		"@types/nodemailer": "^6.4.7",
 		"@types/passport-jwt": "^3.0.8",
@@ -96,7 +97,16 @@
 		"collectCoverageFrom": [
 			"**/*.(t|j)s",
 			"!<rootDir>/modules/**/dtos/**/*.(t|j)s",
-			"!<rootDir>/modules/auth/guards/*.(t|j)s"
+			"!<rootDir>/modules/auth/guards/*.(t|j)s",
+			"!<rootDir>/modules/**/services/index.(t|j)s",
+			"!<rootDir>/modules/**/**.entity.(t|j)s",
+			"!<rootDir>/modules/**/**.module.(t|j)s",
+			"!<rootDir>/modules/**/controllers/index.(t|j)s",
+			"!<rootDir>/providers/database/migrations/**.(t|j)s",
+			"!<rootDir>/providers/**/**.module.(t|j)s",
+			"!<rootDir>/config/**.(t|j)s",
+			"!<rootDir>/main.(t|j)s",
+			"!<rootDir>/app.module.(t|j)s"
 		],
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node",

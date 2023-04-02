@@ -4,10 +4,12 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import { Company } from '../companies/companies.entity';
+import { Message } from '../messages/message.entity';
 
 @Entity('employees')
 export class Employee {
@@ -17,6 +19,9 @@ export class Employee {
 	@Column()
 	name: string;
 
+	@Column({ name: 'profile_picture' })
+	profilePicture: string;
+
 	@Column()
 	office: string;
 
@@ -24,7 +29,7 @@ export class Employee {
 	department: string;
 
 	@Column({ name: 'access_level' })
-	accessLevel: 'manager' | 'employee';
+	accessLevel: 'patrocinador' | 'stackholder';
 
 	@Column()
 	email: string;
@@ -37,6 +42,9 @@ export class Employee {
 
 	@Column({ name: 'company_id' })
 	companyId: string;
+
+	@OneToMany(() => Message, (message) => message.employee)
+	messages: Message[];
 
 	@ManyToOne(() => Company, (company) => company.employees)
 	@JoinColumn({ name: 'company_id' })

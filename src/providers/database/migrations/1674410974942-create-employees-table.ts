@@ -18,6 +18,10 @@ export class CreateEmployeesTable1674410974942 implements MigrationInterface {
 						type: 'varchar',
 					},
 					{
+						name: 'profile_picture',
+						type: 'varchar',
+					},
+					{
 						name: 'email',
 						type: 'varchar',
 					},

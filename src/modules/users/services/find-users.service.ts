@@ -18,7 +18,7 @@ export class FindUsersService {
 				where: [
 					{
 						accessLevel: ILike(resolvedQuery) as
-							| FindOperator<'manager'>
+							| FindOperator<'gestor'>
 							| FindOperator<'auditor'>
 							| FindOperator<'master'>
 							| FindOperator<'consultor'>,

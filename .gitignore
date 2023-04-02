@@ -8,3 +8,4 @@ dist/
 documentation/
 coverage/
 .env
+uploads/
