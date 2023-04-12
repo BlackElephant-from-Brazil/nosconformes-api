@@ -34,7 +34,7 @@ export class FindQuestionsService {
 						},
 					],
 					order: {
-						question: 'ASC',
+						createdAt: 'ASC',
 					},
 					skip,
 					take: ROW_LIMITER,

@@ -16,6 +16,7 @@ export class CreateCompaniesTable1672866368425 implements MigrationInterface {
 					{
 						name: 'logo',
 						type: 'varchar',
+						isNullable: true,
 					},
 					{
 						name: 'name',

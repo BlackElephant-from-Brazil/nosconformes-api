@@ -20,6 +20,7 @@ export class CreateEmployeesTable1674410974942 implements MigrationInterface {
 					{
 						name: 'profile_picture',
 						type: 'varchar',
+						isNullable: true,
 					},
 					{
 						name: 'email',

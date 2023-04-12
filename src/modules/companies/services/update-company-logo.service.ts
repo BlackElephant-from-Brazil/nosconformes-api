@@ -40,7 +40,7 @@ export class UpdateCompanyLogoService {
 
 		if (foundCompany.logo) {
 			const filename = foundCompany.logo.split('uploads/')[1];
-			fs.unlinkSync(`uploads/${filename}`);
+			filename && fs.unlinkSync(`uploads/${filename}`);
 		}
 
 		foundCompany.logo = `${process.env.BASE_URL}:${

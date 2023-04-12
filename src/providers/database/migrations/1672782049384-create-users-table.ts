@@ -17,6 +17,7 @@ export class CreateUsersTable1672782049384 implements MigrationInterface {
 					{
 						name: 'profile_picture',
 						type: 'varchar',
+						isNullable: true,
 					},
 					{
 						name: 'name',

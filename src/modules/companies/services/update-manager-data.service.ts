@@ -89,6 +89,7 @@ export class UpdateManagerDataService {
 
 				foundManager = createdManager;
 			} catch (err) {
+				console.log(err);
 				throw new InternalServerErrorException(
 					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 					{
