@@ -27,6 +27,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { DeleteEmployeePhotoService } from '../services/delete-employee-photo.service';
 import { UpdateEmployeePhotoService } from '../services/update-employee-photo.service';
+import { FindAvailableEmployeesToQuestionaryServcice } from '../services/find-available-employees-to-questionary.servcice';
+import { FindEmployeesInQuestionaryService } from '../services/find-employees-in-questionary.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('employees')
@@ -38,6 +40,8 @@ export class EmployeesController {
 		private readonly updateEmployeeService: UpdateEmployeeService,
 		private readonly deleteEmployeePhotoService: DeleteEmployeePhotoService,
 		private readonly updateEmployeePhotoService: UpdateEmployeePhotoService,
+		private readonly findAvailableEmployeesToQuestionaryServcice: FindAvailableEmployeesToQuestionaryServcice,
+		private readonly findEmployeesInQuestionaryService: FindEmployeesInQuestionaryService,
 	) {}
 
 	@Post()
@@ -78,12 +82,6 @@ export class EmployeesController {
 		res.status(HttpStatus.OK).send();
 	}
 
-	// @Delete(':id')
-	// async delete(@Param('id') userId: string, @Res() res: Response) {
-	// 	const users = await this.deleteUserService.execute(userId);
-	// 	res.json(users).status(HttpStatus.OK);
-	// }
-
 	@Get(':id')
 	async show(@Param('id') employeeId: string, @Res() res: Response) {
 		const users = await this.findEmployeeByIdService.execute(employeeId);
@@ -120,5 +118,34 @@ export class EmployeesController {
 		);
 
 		res.json(uploadedPhotoUrl).status(HttpStatus.OK);
+	}
+
+	@Get('available-to-questionary/:questinaryId')
+	async findAvailableEmployeesToQuestionary(
+		@Req() req: Request,
+		@Param('questinaryId') questinaryId: string,
+		@Res() res: Response,
+	) {
+		const { userId: employeeId } = req.user as UserInfo;
+		const employees =
+			await this.findAvailableEmployeesToQuestionaryServcice.execute(
+				employeeId,
+				questinaryId,
+			);
+		res.json(employees).status(HttpStatus.OK);
+	}
+
+	@Get('current-in-questionary/:questinaryId')
+	async findEmployeesInQuestionary(
+		@Req() req: Request,
+		@Param('questinaryId') questinaryId: string,
+		@Res() res: Response,
+	) {
+		const { userId: employeeId } = req.user as UserInfo;
+		const employees = await this.findEmployeesInQuestionaryService.execute(
+			employeeId,
+			questinaryId,
+		);
+		res.json(employees).status(HttpStatus.OK);
 	}
 }
