@@ -3,6 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Grouping } from '../grouping.entity';
 
+type foundGroupingsDTO = {
+	groupings: Grouping[];
+	finishedGroupings: Grouping[];
+};
+
 @Injectable()
 export class FindAllGroupingsFromQuestionaryForCompanyService {
 	constructor(
@@ -13,7 +18,7 @@ export class FindAllGroupingsFromQuestionaryForCompanyService {
 	async execute(
 		questionaryId: string,
 		companyId: string,
-	): Promise<Grouping[]> {
+	): Promise<foundGroupingsDTO> {
 		let foundGroupings: Grouping[];
 		try {
 			foundGroupings = await this.groupingsRepository.find({
@@ -33,6 +38,9 @@ export class FindAllGroupingsFromQuestionaryForCompanyService {
 			);
 		}
 
-		return foundGroupings;
+		return {
+			groupings: foundGroupings,
+			finishedGroupings: [],
+		};
 	}
 }
