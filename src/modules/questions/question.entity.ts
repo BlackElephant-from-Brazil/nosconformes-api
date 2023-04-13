@@ -2,7 +2,6 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinColumn,
 	JoinTable,
 	ManyToMany,
 	OneToMany,
@@ -97,7 +96,7 @@ export class Question {
 		joinColumn: { name: 'questions_id' },
 		inverseJoinColumn: { name: 'grouping_id' },
 	})
-	groupings: Grouping[];
+	groupings?: Grouping[];
 
 	@OneToOne(() => Answer, (answer) => answer.question, {
 		cascade: true,

@@ -8,6 +8,7 @@ import { Employee } from 'src/modules/employees/employee.entity';
 import { Repository } from 'typeorm';
 import { Company } from '../companies.entity';
 import { CreateCompanyDTO } from '../dtos/create-company.dto';
+import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 
 @Injectable()
 export class CreateCompanyService {
@@ -16,6 +17,7 @@ export class CreateCompanyService {
 		private companiesRepository: Repository<Company>,
 		@InjectRepository(Employee)
 		private employeesRepository: Repository<Employee>,
+		private hashProvider: BCryptProvider,
 	) {}
 
 	async execute({ company, manager }: CreateCompanyDTO): Promise<Company> {
@@ -43,8 +45,9 @@ export class CreateCompanyService {
 
 		try {
 			createdCompany = this.companiesRepository.create({
-				logo: company.logo,
+				logo: company.logo || '',
 				name: company.name,
+				sector: company.sector,
 				site: company.site,
 				cnpj: company.cnpj,
 			});
@@ -87,14 +90,33 @@ export class CreateCompanyService {
 				);
 			}
 
+			let hashedPassword: string;
+
+			try {
+				hashedPassword = await this.hashProvider.hash({
+					password: '123456',
+				});
+			} catch (e) {
+				throw new InternalServerErrorException(
+					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+					{
+						description:
+							'The error occurred when trying to hash the password',
+					},
+				);
+			}
+
 			try {
 				const createdManager = this.employeesRepository.create({
 					...manager,
+					profilePicture: '',
 					accessLevel: 'patrocinador',
 					companyId: createdCompany._eq,
+					password: hashedPassword,
 				});
 				await this.employeesRepository.save(createdManager);
 			} catch (e) {
+				console.log(e);
 				throw new InternalServerErrorException(
 					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 					{
@@ -104,6 +126,8 @@ export class CreateCompanyService {
 				);
 			}
 		}
+
+		console.log(createdCompany);
 
 		return createdCompany;
 	}

@@ -3,6 +3,8 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
@@ -10,6 +12,7 @@ import {
 } from 'typeorm';
 import { Company } from '../companies/companies.entity';
 import { Message } from '../messages/message.entity';
+import { Questionary } from '../questionaries/questionary.entity';
 
 @Entity('employees')
 export class Employee {
@@ -49,6 +52,17 @@ export class Employee {
 	@ManyToOne(() => Company, (company) => company.employees)
 	@JoinColumn({ name: 'company_id' })
 	company: Company;
+
+	@ManyToMany(() => Questionary, { cascade: true })
+	@JoinTable({
+		name: 'questionaries_employees',
+		joinColumn: { name: 'employee_id', referencedColumnName: '_eq' },
+		inverseJoinColumn: {
+			name: 'questionary_id',
+			referencedColumnName: '_eq',
+		},
+	})
+	questionaries: Questionary[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;
