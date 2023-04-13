@@ -50,6 +50,9 @@ export class FindAllQuestionariesFromCompanyByIdService {
 						_eq: companyId,
 					},
 				},
+				relations: {
+					employees: true,
+				},
 			});
 		} catch (e) {
 			throw new InternalServerErrorException(
