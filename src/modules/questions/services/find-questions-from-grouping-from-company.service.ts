@@ -48,8 +48,12 @@ export class FindQuestionsFromGroupingFromCompanyService {
 						_eq: groupingId,
 					},
 				},
+				relations: {
+					employees: true,
+				},
 			});
 		} catch (error) {
+			console.log(error);
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{

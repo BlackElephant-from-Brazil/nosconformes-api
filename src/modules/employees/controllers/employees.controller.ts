@@ -29,6 +29,8 @@ import { DeleteEmployeePhotoService } from '../services/delete-employee-photo.se
 import { UpdateEmployeePhotoService } from '../services/update-employee-photo.service';
 import { FindAvailableEmployeesToQuestionaryServcice } from '../services/find-available-employees-to-questionary.servcice';
 import { FindEmployeesInQuestionaryService } from '../services/find-employees-in-questionary.service';
+import { FindAvailableEmployeesToQuestionsServcice } from '../services/find-available-employees-to-questions.servcice';
+import { FindEmployeesInQuestionsService } from '../services/find-employees-in-questions.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('employees')
@@ -42,6 +44,8 @@ export class EmployeesController {
 		private readonly updateEmployeePhotoService: UpdateEmployeePhotoService,
 		private readonly findAvailableEmployeesToQuestionaryServcice: FindAvailableEmployeesToQuestionaryServcice,
 		private readonly findEmployeesInQuestionaryService: FindEmployeesInQuestionaryService,
+		private readonly findAvailableEmployeesToQuestionsServcice: FindAvailableEmployeesToQuestionsServcice,
+		private readonly findEmployeesInQuestionsService: FindEmployeesInQuestionsService,
 	) {}
 
 	@Post()
@@ -145,6 +149,35 @@ export class EmployeesController {
 		const employees = await this.findEmployeesInQuestionaryService.execute(
 			employeeId,
 			questinaryId,
+		);
+		res.json(employees).status(HttpStatus.OK);
+	}
+
+	@Get('available-to-questions/company')
+	async findAvailableEmployeesToQuestions(
+		@Req() req: Request,
+		@Query('questionIds') questionIds: string[],
+		@Res() res: Response,
+	) {
+		const { userId: employeeId } = req.user as UserInfo;
+		const employees =
+			await this.findAvailableEmployeesToQuestionsServcice.execute(
+				employeeId,
+				questionIds,
+			);
+		res.json(employees).status(HttpStatus.OK);
+	}
+
+	@Get('current-in-questions/company')
+	async findEmployeesInQuestions(
+		@Req() req: Request,
+		@Query('questionIds') questionIds: string[],
+		@Res() res: Response,
+	) {
+		const { userId: employeeId } = req.user as UserInfo;
+		const employees = await this.findEmployeesInQuestionsService.execute(
+			employeeId,
+			questionIds,
 		);
 		res.json(employees).status(HttpStatus.OK);
 	}

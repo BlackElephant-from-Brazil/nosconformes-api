@@ -15,6 +15,7 @@ import { Grouping } from '../groupings/grouping.entity';
 import { PartialAccordingButton } from '../partial-according-buttons/partial-according-button.entity';
 import { Reference } from '../references/reference.entity';
 import { Tag } from '../tags/tag.entity';
+import { Employee } from '../employees/employee.entity';
 
 @Entity('questions')
 export class Question {
@@ -97,6 +98,14 @@ export class Question {
 		inverseJoinColumn: { name: 'grouping_id' },
 	})
 	groupings?: Grouping[];
+
+	@ManyToMany(() => Employee, { cascade: true })
+	@JoinTable({
+		name: 'questions_employees',
+		joinColumn: { name: 'question_id' },
+		inverseJoinColumn: { name: 'employee_id' },
+	})
+	employees?: Employee[];
 
 	@OneToOne(() => Answer, (answer) => answer.question, {
 		cascade: true,

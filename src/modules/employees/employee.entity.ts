@@ -13,6 +13,7 @@ import {
 import { Company } from '../companies/companies.entity';
 import { Message } from '../messages/message.entity';
 import { Questionary } from '../questionaries/questionary.entity';
+import { Question } from '../questions/question.entity';
 
 @Entity('employees')
 export class Employee {
@@ -63,6 +64,17 @@ export class Employee {
 		},
 	})
 	questionaries: Questionary[];
+
+	@ManyToMany(() => Question, { cascade: true })
+	@JoinTable({
+		name: 'questions_employees',
+		joinColumn: { name: 'employee_id', referencedColumnName: '_eq' },
+		inverseJoinColumn: {
+			name: 'question_id',
+			referencedColumnName: '_eq',
+		},
+	})
+	questions: Question[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;
