@@ -6,13 +6,14 @@ import { Employee } from '../employees/employee.entity';
 import { companiesControllers } from './controllers';
 import { EmployeesModule } from '../employees/employees.module';
 import { User } from '../users/users.entity';
+import { BCryptProvider } from 'src/providers/encriptation/bcrypt.provider';
 
 @Module({
 	imports: [
 		EmployeesModule,
 		TypeOrmModule.forFeature([Company, Employee, User]),
 	],
-	providers: [...companiesServices],
+	providers: [...companiesServices, BCryptProvider],
 	controllers: [...companiesControllers],
 })
 export class CompaniesModule {}

@@ -90,6 +90,15 @@ class Company {
 	name: string;
 
 	@ApiProperty({
+		description: 'The sector of the company',
+		example: 'IT',
+		required: true,
+	})
+	@IsNotEmpty({ message: 'Setor da empresa é obrigatório' })
+	@IsString({ message: 'Setor da empresa deve ser um texto' })
+	sector: string;
+
+	@ApiProperty({
 		description: 'The CNPJ of the company',
 		example: '10123123000112',
 		required: true,

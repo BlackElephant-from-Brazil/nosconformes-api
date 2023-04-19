@@ -28,12 +28,12 @@ export class CreateQuestionService {
 	) {}
 
 	async execute(createQuestionDTO: CreateQuestionDTO): Promise<Question> {
-		console.log(createQuestionDTO);
 		let tags: Tag[] = [];
 		let references: Reference[] = [];
 		let accordingButtons: AccordingButton[] = [];
 		let partialAccordingButtons: PartialAccordingButton[] = [];
 		let groupings: Grouping[] = [];
+
 		try {
 			tags = await this.tagsRepository.find({
 				where: {
@@ -51,25 +51,6 @@ export class CreateQuestionService {
 				},
 			);
 		}
-
-		createQuestionDTO.tags.map(async (tag) => {
-			if (tags.findIndex((t) => t._eq === tag) === -1) {
-				try {
-					const newTag = await this.tagsRepository.save(
-						this.tagsRepository.create({ label: tag }),
-					);
-					tags.push(newTag);
-				} catch (err) {
-					throw new InternalServerErrorException(
-						'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
-						{
-							description:
-								'This error occurred when trying to save the new tag in the create-question.service.ts',
-						},
-					);
-				}
-			}
-		});
 
 		try {
 			references = await this.referencesRepository.find({
@@ -90,25 +71,6 @@ export class CreateQuestionService {
 				},
 			);
 		}
-
-		createQuestionDTO.references.map(async (reference) => {
-			if (references.findIndex((r) => r._eq === reference) === -1) {
-				try {
-					const newReference = await this.referencesRepository.save(
-						this.referencesRepository.create({ label: reference }),
-					);
-					references.push(newReference);
-				} catch (err) {
-					throw new InternalServerErrorException(
-						'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
-						{
-							description:
-								'This error occurred when trying to save the new tag in the create-question.service.ts',
-						},
-					);
-				}
-			}
-		});
 
 		try {
 			groupings = await this.groupingsRepository.find({
@@ -145,13 +107,12 @@ export class CreateQuestionService {
 				createQuestionDTO.nonAccordingAllowInformation,
 		});
 
-		question.tags = tags;
-		question.references = references;
+		question.tags = [...tags];
+		question.references = [...references];
 
 		try {
 			await this.questionsRepository.save(question);
 		} catch (err) {
-			console.log(err);
 			throw new InternalServerErrorException(
 				'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 				{
@@ -220,6 +181,48 @@ export class CreateQuestionService {
 
 		question.accordingButtons = accordingButtons;
 		question.partialAccordingButtons = partialAccordingButtons;
+
+		createQuestionDTO.tags.map(async (tag) => {
+			if (tags.findIndex((t) => t._eq === tag) === -1) {
+				try {
+					const savedTag = await this.tagsRepository.save(
+						this.tagsRepository.create({ label: tag }),
+					);
+					question.tags.push(savedTag);
+					await this.questionsRepository.save(question);
+				} catch (err) {
+					throw new InternalServerErrorException(
+						'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+						{
+							description:
+								'This error occurred when trying to save the new tag in the create-question.service.ts',
+						},
+					);
+				}
+			}
+		});
+
+		createQuestionDTO.references.map(async (reference) => {
+			if (references.findIndex((r) => r._eq === reference) === -1) {
+				try {
+					const savedReference = await this.referencesRepository.save(
+						this.referencesRepository.create({
+							label: reference,
+						}),
+					);
+					question.references.push(savedReference);
+					await this.questionsRepository.save(question);
+				} catch (err) {
+					throw new InternalServerErrorException(
+						'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
+						{
+							description:
+								'This error occurred when trying to save the new tag in the create-question.service.ts',
+						},
+					);
+				}
+			}
+		});
 
 		return question;
 	}

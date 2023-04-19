@@ -1,11 +1,12 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateUsersTable1672782049384 implements MigrationInterface {
+export class CreateAccordingButtonsFilesTable1681846721042
+	implements MigrationInterface
+{
 	public async up(queryRunner: QueryRunner): Promise<void> {
-		await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
 		await queryRunner.createTable(
 			new Table({
-				name: 'users',
+				name: 'according_buttons_files',
 				columns: [
 					{
 						name: '_eq',
@@ -15,37 +16,13 @@ export class CreateUsersTable1672782049384 implements MigrationInterface {
 						default: 'uuid_generate_v4()',
 					},
 					{
-						name: 'profile_picture',
-						type: 'varchar',
-						isNullable: true,
+						name: 'according_button_id',
+						type: 'uuid',
 					},
 					{
-						name: 'name',
+						name: 'file_path',
 						type: 'varchar',
 					},
-					{
-						name: 'email',
-						type: 'varchar',
-						isUnique: true,
-					},
-					{
-						name: 'password',
-						type: 'varchar',
-					},
-					{
-						name: 'phone',
-						type: 'varchar',
-						length: '11',
-					},
-					{
-						name: 'office',
-						type: 'varchar',
-					},
-					{
-						name: 'access_level',
-						type: 'varchar',
-					},
-
 					{
 						name: 'created_at',
 						type: 'timestamp',
@@ -57,11 +34,21 @@ export class CreateUsersTable1672782049384 implements MigrationInterface {
 						default: 'now()',
 					},
 				],
+				foreignKeys: [
+					{
+						name: 'AccordingButtonAccordingButtonsFiles',
+						referencedTableName: 'according_buttons',
+						referencedColumnNames: ['_eq'],
+						columnNames: ['according_button_id'],
+						onDelete: 'CASCADE',
+						onUpdate: 'CASCADE',
+					},
+				],
 			}),
 		);
 	}
 
 	public async down(queryRunner: QueryRunner): Promise<void> {
-		await queryRunner.dropTable('users');
+		await queryRunner.dropTable('according_buttons_files');
 	}
 }

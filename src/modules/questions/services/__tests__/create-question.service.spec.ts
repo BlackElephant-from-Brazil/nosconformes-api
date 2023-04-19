@@ -67,6 +67,13 @@ describe('CreateQuestionService', () => {
 			jest.spyOn(questionsRepository, 'create').mockReturnValueOnce({
 				_eq: '1',
 				...createQuestionDTO,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				references: [],
+				tags: [],
+				partialAccordingButtons: [],
+				accordingButtons: [],
+				groupings: [],
 			} as Question);
 			jest.spyOn(questionsRepository, 'save').mockRejectedValueOnce(
 				new Error(),

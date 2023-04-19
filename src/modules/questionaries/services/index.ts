@@ -7,7 +7,9 @@ import { FindAvailableCompaniesFromQuestionaryService } from './find-available-c
 import { FindAvailableGroupingsFromQuestionaryService } from './find-available-groupings-from-questionary.service';
 import { FindQuestionariesService } from './find-questionaries.service';
 import { FindQuestionaryByIdService } from './find-questionary-by-id.service';
+import { RemoveEmployeeFromQuestionaryService } from './remove-employee-from-questionary.service';
 import { UpdateCompaniesFromQuestionaryService } from './update-companies-from-questionary.service';
+import { UpdateEmployeesInQuestionariesService } from './update-employees-in-questionaries.service';
 
 export const questionariesService = [
 	FindQuestionariesService,
@@ -20,4 +22,6 @@ export const questionariesService = [
 	FindAvailableGroupingsFromQuestionaryService,
 	AddGroupingToQuestionaryService,
 	FindAllQuestionariesFromCompanyByIdService,
+	UpdateEmployeesInQuestionariesService,
+	RemoveEmployeeFromQuestionaryService,
 ];

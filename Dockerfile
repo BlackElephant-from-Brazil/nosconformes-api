@@ -1,15 +1,15 @@
-FROM node:18-alpine
+FROM postgres:latest
 
-WORKDIR /usr/src/app
+RUN apt-get update && apt-get install -y nodejs npm
 
-COPY --chown=node:node package*.json ./
+ENV POSTGRES_USER=nosconformes
+ENV POSTGRES_PASSWORD=n0W7I8$zK@9s
+ENV POSTGRES_DB=nosconformes
 
-RUN npm ci
+WORKDIR /app
 
-COPY --chown=node:node . .
+COPY . .
 
-EXPOSE 3000
+RUN npm install
 
 CMD ["npm", "run", "start:dev"]
-
-# TODO: https://www.tomray.dev/nestjs-docker-compose-postgres to implement this dockerfile

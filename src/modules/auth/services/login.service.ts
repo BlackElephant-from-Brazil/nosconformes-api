@@ -73,6 +73,7 @@ export class LoginService {
 					typedPassword: password,
 				});
 			} catch (e) {
+				console.log(e);
 				throw new InternalServerErrorException(
 					'Ocorreu um erro interno no servidor. Por favor tente novamente ou contate o suporte.',
 					{

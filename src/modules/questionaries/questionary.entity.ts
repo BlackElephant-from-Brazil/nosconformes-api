@@ -11,6 +11,7 @@ import {
 import { Company } from '../companies/companies.entity';
 import { Grouping } from '../groupings/grouping.entity';
 import { QuestionariesCompanies } from './questionaries-companies.entity';
+import { Employee } from '../employees/employee.entity';
 
 @Entity('questionaries')
 export class Questionary {
@@ -44,6 +45,17 @@ export class Questionary {
 		},
 	)
 	questionariesCompanies: QuestionariesCompanies[];
+
+	@ManyToMany(() => Employee, { cascade: true })
+	@JoinTable({
+		name: 'questionaries_employees',
+		joinColumn: { name: 'questionary_id', referencedColumnName: '_eq' },
+		inverseJoinColumn: {
+			name: 'employee_id',
+			referencedColumnName: '_eq',
+		},
+	})
+	employees: Employee[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

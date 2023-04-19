@@ -18,6 +18,7 @@ import { ReferencesModule } from './modules/references/references.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { UsersModule } from './modules/users/users.module';
 import { EncriptationModule } from './providers/encriptation/encriptation.module';
+import { ActionPlanModule } from './modules/action-plan/action-plan.module';
 
 @Module({
 	imports: [
@@ -39,6 +40,7 @@ import { EncriptationModule } from './providers/encriptation/encriptation.module
 		ReferencesModule,
 		MessagesModule,
 		AnswersModule,
+		ActionPlanModule,
 	],
 	controllers: [UploadsController],
 })
