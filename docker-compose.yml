@@ -1,25 +1,37 @@
-version: '3.9'
+version: '3'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: nosconformes
-    ports:
-      - "3000:3000"
-    environment:
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=nosconformes
-      - POSTGRES_PASSWORD=nosconformes
-      - POSTGRES_DB=nosconformes
-    depends_on:
-      - postgres
-  postgres:
-    image: postgres:13-alpine
-    container_name: nosconformesdb
-    environment:
-      - POSTGRES_USER=nosconformes
-      - POSTGRES_PASSWORD=nosconformes
-      - POSTGRES_DB=nosconformes
+    db:
+        build: .
+        ports:
+            - '5432:5432'
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: nosconformes
+            POSTGRES_PASSWORD: n0W7I8$zK#9s
+            POSTGRES_DB: nosconformes
+        networks:
+            - mynetwork
+
+    app:
+        build: .
+        ports:
+            - '3333:3333'
+        environment:
+            POSTGRES_USER: nosconformes
+            POSTGRES_PASSWORD: n0W7I8$zK#9s
+            POSTGRES_DB: nosconformes
+            POSTGRES_HOST: db
+        depends_on:
+            - db
+        networks:
+            - mynetwork
+        # command: npm run start:dev
+
+volumes:
+    db-data:
+
+networks:
+    mynetwork:
+        driver: bridge

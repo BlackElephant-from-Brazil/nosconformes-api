@@ -39,17 +39,23 @@ export class FindAvailableEmployeesToQuestionsServcice {
 		}
 
 		try {
-			employeesInQuestions = await this.employeesRepository.find({
-				where: {
-					questions: {
-						_eq: Not(
-							Raw((alias) => `${alias} = ALL(:questionIds)`, {
-								questionIds,
-							}),
-						),
-					},
-				},
-			});
+			employeesInQuestions = await this.employeesRepository
+				.createQueryBuilder('employee')
+				.leftJoin('employee.questions', 'questions')
+				.where(
+					`NOT EXISTS (SELECT 1
+						FROM questions q
+						LEFT JOIN questions_employees qe ON qe.question_id = q._eq
+						LEFT JOIN employees e ON e._eq = qe.employee_id
+						WHERE 
+						qe.question_id = ALL(:questionIds)
+					)`,
+				)
+				.andWhere('employee.accessLevel != :accessLevel', {
+					accessLevel: 'patrocinador',
+				})
+				.setParameters({ questionIds })
+				.getMany();
 		} catch (error) {
 			console.log(error);
 			throw new InternalServerErrorException(
@@ -59,6 +65,8 @@ export class FindAvailableEmployeesToQuestionsServcice {
 				},
 			);
 		}
+
+		console.log(employeesInQuestions);
 
 		return employeesInQuestions;
 	}

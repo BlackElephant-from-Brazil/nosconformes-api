@@ -50,6 +50,8 @@ export class FindGroupingByIdForCompanyService {
 						tags: true,
 						references: true,
 						answer: true,
+						accordingButtons: true,
+						partialAccordingButtons: true,
 					},
 				},
 			});
@@ -63,7 +65,14 @@ export class FindGroupingByIdForCompanyService {
 			);
 		}
 
-		console.log(foundGrouping);
+		let percentage = 0;
+
+		percentage = Math.ceil(
+			foundGrouping.questions.length /
+				foundGrouping.questions.filter((q) => q.answer).length,
+		);
+
+		foundGrouping.percentage = percentage;
 
 		return foundGrouping;
 	}

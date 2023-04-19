@@ -4,10 +4,12 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import { Question } from '../questions/question.entity';
+import { AccordingButtonFile } from '../according-button-files/according-button-file.entity';
 
 @Entity('according_buttons')
 export class AccordingButton {
@@ -23,6 +25,13 @@ export class AccordingButton {
 	@ManyToOne(() => Question, (question) => question.accordingButtons)
 	@JoinColumn({ name: 'question_id' })
 	question: Question;
+
+	@OneToMany(
+		() => AccordingButtonFile,
+		(accordingButtonFile) => accordingButtonFile.accordingButton,
+		{ cascade: true },
+	)
+	accordingButtonFiles: AccordingButtonFile[];
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;
